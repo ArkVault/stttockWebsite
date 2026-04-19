@@ -1,30 +1,43 @@
-"use client"
+"use client";
 
-import React, { useRef, useEffect, useState } from "react"
+import React, { useRef, useEffect, useState } from "react";
 
-import { RevealText } from "@/components/reveal-text"
-import { MobileNav } from "@/components/mobile-nav"
-import { GlitchButton } from "@/components/glitch-button"
-import { TypewriterText } from "@/components/typewriter-text"
-import { PricingCard } from "@/components/pricing-card"
+import { RevealText } from "@/components/reveal-text";
+import { MobileNav } from "@/components/mobile-nav";
+import { GlitchButton } from "@/components/glitch-button";
+import { TypewriterText } from "@/components/typewriter-text";
+import { PricingCard } from "@/components/pricing-card";
 
 // ─── Intersection Observer hook ──────────────────────────────────────────────
 function useInView(threshold = 0.15) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [inView, setInView] = useState(false)
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
   useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true) }, { threshold })
-    obs.observe(el)
-    return () => obs.disconnect()
-  }, [threshold])
-  return { ref, inView }
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) setInView(true);
+      },
+      { threshold },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return { ref, inView };
 }
 
 // ─── Bento card ──────────────────────────────────────────────────────────────
-function BentoCard({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
-  const { ref, inView } = useInView(0.1)
+function BentoCard({
+  children,
+  className = "",
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const { ref, inView } = useInView(0.1);
   return (
     <div
       ref={ref}
@@ -35,12 +48,16 @@ function BentoCard({ children, className = "", delay = 0 }: { children: React.Re
         transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms, border-color 0.3s ease, background-color 0.3s ease`,
       }}
     >
-      <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-        style={{ background: "radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0,0,0,0.03), transparent 60%)" }}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        style={{
+          background:
+            "radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0,0,0,0.03), transparent 60%)",
+        }}
       />
       {children}
     </div>
-  )
+  );
 }
 
 // ─── Pill tag ─────────────────────────────────────────────────────────────────
@@ -49,46 +66,256 @@ function Tag({ children }: { children: React.ReactNode }) {
     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] tracking-widest font-sans text-black/40 bg-black/[0.04]">
       {children}
     </span>
-  )
+  );
 }
 
 // ─── SVG icons ────────────────────────────────────────────────────────────────
 function Icon({ type }: { type: string }) {
   const icons: Record<string, React.ReactNode> = {
-    trending_down: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>,
-    users: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
-    package: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="m16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/></svg>,
-    pos: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>,
-    brain: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>,
-    bell: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
-    calendar: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
-    chart: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
-    building: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>,
-    percent: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>,
-    webhook: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M18 16.98h-5.99c-1.1 0-1.95.94-2.48 1.9A4 4 0 0 1 2 17c.01-.7.2-1.4.57-2"/><path d="m6 17 3.13-5.78c.53-.97.1-2.18-.5-3.1a4 4 0 1 1 6.89-4.06"/><path d="m12 6 3.13 5.73C15.66 12.7 16.9 13 18 13a4 4 0 0 1 0 8"/></svg>,
-    check: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>,
-    quote: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>,
-    sun: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>,
-    moon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
-  }
-  return <>{icons[type] ?? null}</>
+    trending_down: (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+        <polyline points="17 18 23 18 23 12" />
+      </svg>
+    ),
+    users: (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+    ),
+    package: (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <path d="m16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+        <polyline points="3.29 7 12 12 20.71 7" />
+        <line x1="12" y1="22" x2="12" y2="12" />
+      </svg>
+    ),
+    pos: (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <rect x="2" y="3" width="20" height="14" rx="2" />
+        <path d="M8 21h8M12 17v4" />
+      </svg>
+    ),
+    brain: (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" />
+        <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" />
+      </svg>
+    ),
+    bell: (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+      </svg>
+    ),
+    calendar: (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+        <line x1="16" y1="2" x2="16" y2="6" />
+        <line x1="8" y1="2" x2="8" y2="6" />
+        <line x1="3" y1="10" x2="21" y2="10" />
+      </svg>
+    ),
+    chart: (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <line x1="18" y1="20" x2="18" y2="10" />
+        <line x1="12" y1="20" x2="12" y2="4" />
+        <line x1="6" y1="20" x2="6" y2="14" />
+      </svg>
+    ),
+    building: (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <path d="M9 3v18M15 3v18M3 9h18M3 15h18" />
+      </svg>
+    ),
+    percent: (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <line x1="19" y1="5" x2="5" y2="19" />
+        <circle cx="6.5" cy="6.5" r="2.5" />
+        <circle cx="17.5" cy="17.5" r="2.5" />
+      </svg>
+    ),
+    webhook: (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <path d="M18 16.98h-5.99c-1.1 0-1.95.94-2.48 1.9A4 4 0 0 1 2 17c.01-.7.2-1.4.57-2" />
+        <path d="m6 17 3.13-5.78c.53-.97.1-2.18-.5-3.1a4 4 0 1 1 6.89-4.06" />
+        <path d="m12 6 3.13 5.73C15.66 12.7 16.9 13 18 13a4 4 0 0 1 0 8" />
+      </svg>
+    ),
+    check: (
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+    ),
+    quote: (
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
+        <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z" />
+      </svg>
+    ),
+    sun: (
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <circle cx="12" cy="12" r="5" />
+        <line x1="12" y1="1" x2="12" y2="3" />
+        <line x1="12" y1="21" x2="12" y2="23" />
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+        <line x1="1" y1="12" x2="3" y2="12" />
+        <line x1="21" y1="12" x2="23" y2="12" />
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+      </svg>
+    ),
+    moon: (
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+      </svg>
+    ),
+  };
+  return <>{icons[type] ?? null}</>;
 }
 
 // ─── Accordion item ──────────────────���───��───────────────────────────────────
-function AccordionItem({ question, answer, index }: { question: string; answer: string; index: number }) {
-  const [open, setOpen] = useState(false)
+function AccordionItem({
+  question,
+  answer,
+  index,
+}: {
+  question: string;
+  answer: string;
+  index: number;
+}) {
+  const [open, setOpen] = useState(false);
   return (
     <div className="border-b border-black/[0.06]">
       <button
-        onClick={() => setOpen(v => !v)}
+        onClick={() => setOpen((v) => !v)}
         className="w-full flex items-center justify-between py-5 text-left gap-4 group"
       >
-        <span className="text-sm font-light text-[#111] leading-relaxed group-hover:text-black transition-colors">{question}</span>
+        <span className="text-sm font-light text-[#111] leading-relaxed group-hover:text-black transition-colors">
+          {question}
+        </span>
         <span
           className="shrink-0 w-5 h-5 rounded-full border border-black/10 flex items-center justify-center text-black/30 transition-transform duration-300"
           style={{ transform: open ? "rotate(45deg)" : "rotate(0deg)" }}
         >
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
             <line x1="5" y1="1" x2="5" y2="9" />
             <line x1="1" y1="5" x2="9" y2="5" />
           </svg>
@@ -101,54 +328,114 @@ function AccordionItem({ question, answer, index }: { question: string; answer: 
         <p className="pb-5 text-sm text-black/45 leading-relaxed">{answer}</p>
       </div>
     </div>
-  )
+  );
 }
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function StttockPage() {
-  const [email, setEmail] = useState("")
-  const [submitted, setSubmitted] = useState(false)
-  const heroReady = true
-  const videoReady = true
-  const [billingAnnual, setBillingAnnual] = useState(false)
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const heroReady = true;
+  const videoReady = true;
+  const [billingAnnual, setBillingAnnual] = useState(false);
 
   const handleMouse = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = e.currentTarget
-    const rect = el.getBoundingClientRect()
-    el.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`)
-    el.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`)
-  }
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    el.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+    el.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+  };
 
   // ─── Data ──────────────────────────────────────────────────────────────────
   const problems = [
-    { icon: "trending_down", title: "Mermas que nadie explica", desc: "Pérdidas de inventario sin rastro ni responsables claros." },
-    { icon: "users",         title: "Staff sin cuentas claras",   desc: "Turnos desorganizados y sin control de operaciones por rol." },
-    { icon: "package",       title: "Inventario que nunca cuadra", desc: "Conteos manuales que no coinciden con las ventas reales." },
-  ]
+    {
+      icon: "trending_down",
+      title: "Mermas que nadie explica",
+      desc: "Pérdidas de inventario sin rastro ni responsables claros.",
+    },
+    {
+      icon: "users",
+      title: "Staff sin cuentas claras",
+      desc: "Turnos desorganizados y sin control de operaciones por rol.",
+    },
+    {
+      icon: "package",
+      title: "Inventario que nunca cuadra",
+      desc: "Conteos manuales que no coinciden con las ventas reales.",
+    },
+  ];
 
   const steps = [
-    { n: "01", title: "Sube tu menú",                   desc: "La IA detecta insumos automáticamente." },
-    { n: "02", title: "Tu equipo opera con roles y PIN", desc: "Control de acceso por nivel de responsabilidad." },
-    { n: "03", title: "Recibes alertas de stock y merma", desc: "Notificaciones en tiempo real cuando algo no cuadra." },
-    { n: "04", title: "Ves proyecciones y ROI real",     desc: "Datos accionables para tomar mejores decisiones." },
-  ]
+    {
+      n: "01",
+      title: "Sube tu menú",
+      desc: "La IA detecta insumos automáticamente.",
+    },
+    {
+      n: "02",
+      title: "Tu equipo opera con roles y PIN",
+      desc: "Control de acceso por nivel de responsabilidad.",
+    },
+    {
+      n: "03",
+      title: "Recibes alertas de stock y merma",
+      desc: "Notificaciones en tiempo real cuando algo no cuadra.",
+    },
+    {
+      n: "04",
+      title: "Ves proyecciones y ROI real",
+      desc: "Datos accionables para tomar mejores decisiones.",
+    },
+  ];
 
   const features = [
-    { icon: "pos",      title: "POS con control por rol",   desc: "Admin, jefe de piso, jefe de barra, mesero." },
-    { icon: "brain",    title: "Menú con parser IA",        desc: "Extrae insumos automáticamente de tu carta." },
-    { icon: "bell",     title: "Alertas de stock",          desc: "Sugerencias de pedido basadas en consumo." },
-    { icon: "calendar", title: "Reservaciones",             desc: "Sync con OpenTable y otras plataformas." },
-    { icon: "chart",    title: "Proyecciones y ROI",        desc: "Calculadora de retorno de inversión real." },
-    { icon: "building", title: "Multi-sucursal",            desc: "Consolidación para cadenas de restaurantes." },
-    { icon: "percent",  title: "IVA configurable",          desc: "16% general o 8% zona fronteriza." },
-    { icon: "webhook",  title: "Webhooks seguros",          desc: "Replay protection para integraciones de pago." },
-  ]
+    {
+      icon: "pos",
+      title: "POS con control por rol",
+      desc: "Admin, jefe de piso, jefe de barra, mesero.",
+    },
+    {
+      icon: "brain",
+      title: "Menú con parser IA",
+      desc: "Extrae insumos automáticamente de tu carta.",
+    },
+    {
+      icon: "bell",
+      title: "Alertas de stock",
+      desc: "Sugerencias de pedido basadas en consumo.",
+    },
+    {
+      icon: "calendar",
+      title: "Reservaciones",
+      desc: "Sync con OpenTable y otras plataformas.",
+    },
+    {
+      icon: "chart",
+      title: "Proyecciones y ROI",
+      desc: "Calculadora de retorno de inversión real.",
+    },
+    {
+      icon: "building",
+      title: "Multi-sucursal",
+      desc: "Consolidación para cadenas de restaurantes.",
+    },
+    {
+      icon: "percent",
+      title: "IVA configurable",
+      desc: "16% general o 8% zona fronteriza.",
+    },
+    {
+      icon: "webhook",
+      title: "Webhooks seguros",
+      desc: "Replay protection para integraciones de pago.",
+    },
+  ];
 
   const stats = [
-    { value: "-30%",  label: "merma en 90 días" },
+    { value: "-30%", label: "merma en 90 días" },
     { value: "+2 hrs", label: "al día libres para el dueño" },
-    { value: "ROI+",  label: "positivo desde mes 2" },
-  ]
+    { value: "ROI+", label: "positivo desde mes 2" },
+  ];
 
   const plans = [
     {
@@ -157,7 +444,12 @@ export default function StttockPage() {
       annual: "$1,499",
       period: "MXN/mes",
       sub: "1 sucursal, 5 usuarios",
-      features: ["Inventario básico", "POS básico", "Reportes estándar", "Soporte por email"],
+      features: [
+        "Inventario básico",
+        "POS básico",
+        "Reportes estándar",
+        "Soporte por email",
+      ],
       cta: "Empezar gratis",
       stripeKey: "starter" as const,
       highlight: false,
@@ -170,7 +462,13 @@ export default function StttockPage() {
       annual: "$2,999",
       period: "MXN/mes",
       sub: "1 sucursal, 10 usuarios",
-      features: ["Todo en Starter", "IA menú parser", "Reservaciones", "Alertas avanzadas", "Soporte prioritario"],
+      features: [
+        "Todo en Starter",
+        "IA menú parser",
+        "Reservaciones",
+        "Alertas avanzadas",
+        "Soporte prioritario",
+      ],
       cta: "Empezar gratis",
       stripeKey: "business" as const,
       highlight: true,
@@ -182,7 +480,12 @@ export default function StttockPage() {
       annual: "desde $2,399",
       period: "/sucursal/mes",
       sub: "2–5 sucursales",
-      features: ["Todo en Business", "Consolidación multi-sucursal", "Reportes comparativos", "Account manager"],
+      features: [
+        "Todo en Business",
+        "Consolidación multi-sucursal",
+        "Reportes comparativos",
+        "Account manager",
+      ],
       cta: "Solicitar cotización",
       leadPlan: "cadena" as const,
       highlight: false,
@@ -194,60 +497,91 @@ export default function StttockPage() {
       annual: "desde $4,500",
       period: "base/mes",
       sub: "6+ sucursales, SLA",
-      features: ["Todo en Cadena", "SLA garantizado", "Integraciones custom", "Onboarding dedicado"],
+      features: [
+        "Todo en Cadena",
+        "SLA garantizado",
+        "Integraciones custom",
+        "Onboarding dedicado",
+      ],
       cta: "Contactar",
       leadPlan: "enterprise" as const,
       highlight: false,
       delay: 200,
     },
-  ]
+  ];
 
   const testimonials = [
     {
-      quote: "Redujimos las mermas un 35% en los primeros 3 meses. Ahora sé exactamente qué pasa en mi inventario.",
+      quote:
+        "Redujimos las mermas un 35% en los primeros 3 meses. Ahora sé exactamente qué pasa en mi inventario.",
       name: "Ricardo Mendoza",
       role: "Operador",
       place: "Cantina La Reforma, CDMX",
     },
     {
-      quote: "El parser de menú nos ahorró semanas de trabajo. La IA detectó todos los insumos de nuestra carta en minutos.",
+      quote:
+        "El parser de menú nos ahorró semanas de trabajo. La IA detectó todos los insumos de nuestra carta en minutos.",
       name: "María Elena Ruiz",
       role: "Gerente General",
       place: "Mariscos El Puerto, Monterrey",
     },
     {
-      quote: "Por fin puedo irme tranquilo a casa. Las alertas me avisan si algo no cuadra en cualquiera de mis 4 sucursales.",
+      quote:
+        "Por fin puedo irme tranquilo a casa. Las alertas me avisan si algo no cuadra en cualquiera de mis 4 sucursales.",
       name: "Carlos Vega",
       role: "Dueño",
       place: "Tacos Don Carlos, Guadalajara",
     },
-  ]
+  ];
 
   const faqs = [
-    { q: "¿Qué pasa tras los 30 días?", a: "Tu prueba gratuita se convierte automáticamente en el plan que elijas. Te avisamos 3 días antes para que decidas si continuar. Sin compromisos." },
-    { q: "¿Puedo cancelar cuando quiera?", a: "Sí, puedes cancelar en cualquier momento desde tu panel de control. No hay penalizaciones ni cargos ocultos." },
-    { q: "¿Funciona sin internet?", a: "Stttock tiene modo offline para el POS. Las ventas se sincronizan automáticamente cuando vuelve la conexión." },
-    { q: "¿Qué tan rápido se implementa?", a: "La mayoría de nuestros clientes están operando en menos de 48 horas. Incluye migración de datos y capacitación del equipo." },
-    { q: "¿Cómo migro de mi sistema actual?", a: "Nuestro equipo de onboarding te ayuda a importar tu menú, inventario y configuraciones. El proceso es guiado y sin costo adicional." },
-    { q: "¿Facturan CFDI?", a: "Sí, emitimos facturas CFDI 4.0 con todos los requisitos fiscales mexicanos. Puedes solicitarlas desde tu panel." },
-    { q: "¿Hay app móvil?", a: "Sí, tenemos apps nativas para iOS y Android. Los meseros pueden tomar pedidos desde su celular o tablet." },
-    { q: "¿El soporte es en español?", a: "100% en español. Nuestro equipo de soporte está en México y entiende las necesidades locales del sector." },
-  ]
+    {
+      q: "¿Qué pasa tras los 30 días?",
+      a: "Tu prueba gratuita se convierte automáticamente en el plan que elijas. Te avisamos 3 días antes para que decidas si continuar. Sin compromisos.",
+    },
+    {
+      q: "¿Puedo cancelar cuando quiera?",
+      a: "Sí, puedes cancelar en cualquier momento desde tu panel de control. No hay penalizaciones ni cargos ocultos.",
+    },
+    {
+      q: "¿Funciona sin internet?",
+      a: "Stttock tiene modo offline para el POS. Las ventas se sincronizan automáticamente cuando vuelve la conexión.",
+    },
+    {
+      q: "¿Qué tan rápido se implementa?",
+      a: "La mayoría de nuestros clientes están operando en menos de 48 horas. Incluye migración de datos y capacitación del equipo.",
+    },
+    {
+      q: "¿Cómo migro de mi sistema actual?",
+      a: "Nuestro equipo de onboarding te ayuda a importar tu menú, inventario y configuraciones. El proceso es guiado y sin costo adicional.",
+    },
+    {
+      q: "¿Facturan CFDI?",
+      a: "Sí, emitimos facturas CFDI 4.0 con todos los requisitos fiscales mexicanos. Puedes solicitarlas desde tu panel.",
+    },
+    {
+      q: "¿Hay app móvil?",
+      a: "Sí, tenemos apps nativas para iOS y Android. Los meseros pueden tomar pedidos desde su celular o tablet.",
+    },
+    {
+      q: "¿El soporte es en español?",
+      a: "100% en español. Nuestro equipo de soporte está en México y entiende las necesidades locales del sector.",
+    },
+  ];
 
   return (
     <div className="bg-[#F5F4F0] text-[#111] min-h-screen font-sans antialiased">
-
-
-
       {/* ── STICKY NAV ────────────────────────────────────────────────────── */}
       <MobileNav />
 
       {/* ── HERO ──────────────────────────────────────────────────────────── */}
       <section className="relative h-screen overflow-hidden">
-
         {/* Video background */}
         <video
-          autoPlay loop muted playsInline
+          autoPlay
+          loop
+          muted
+          playsInline
           className="absolute inset-0 w-full h-full object-cover z-0"
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/9150545-hd_1920_1080_24fps-XUizsTD4O2M8GD1bjGYiFDNA2rMHD7.mp4"
           style={{
@@ -257,10 +591,47 @@ export default function StttockPage() {
         />
 
         {/* Progressive blur + gradient from bottom */}
-        <div className="absolute inset-x-0 bottom-0 z-10 pointer-events-none" style={{ height: "65%", background: "linear-gradient(to top, #F5F4F0 0%, #F5F4F0 18%, rgba(245,244,240,0.85) 35%, rgba(245,244,240,0.5) 55%, rgba(245,244,240,0.15) 75%, transparent 100%)" }} />
-        <div className="absolute inset-x-0 bottom-0 z-10 pointer-events-none" style={{ height: "20%", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", maskImage: "linear-gradient(to top, black 0%, transparent 100%)", WebkitMaskImage: "linear-gradient(to top, black 0%, transparent 100%)" }} />
-        <div className="absolute inset-x-0 bottom-0 z-10 pointer-events-none" style={{ height: "38%", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", maskImage: "linear-gradient(to top, black 0%, transparent 100%)", WebkitMaskImage: "linear-gradient(to top, black 0%, transparent 100%)" }} />
-        <div className="absolute inset-x-0 bottom-0 z-10 pointer-events-none" style={{ height: "55%", backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)", maskImage: "linear-gradient(to top, black 0%, transparent 100%)", WebkitMaskImage: "linear-gradient(to top, black 0%, transparent 100%)" }} />
+        <div
+          className="absolute inset-x-0 bottom-0 z-10 pointer-events-none"
+          style={{
+            height: "65%",
+            background:
+              "linear-gradient(to top, #F5F4F0 0%, #F5F4F0 18%, rgba(245,244,240,0.85) 35%, rgba(245,244,240,0.5) 55%, rgba(245,244,240,0.15) 75%, transparent 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-x-0 bottom-0 z-10 pointer-events-none"
+          style={{
+            height: "20%",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            maskImage: "linear-gradient(to top, black 0%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to top, black 0%, transparent 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-x-0 bottom-0 z-10 pointer-events-none"
+          style={{
+            height: "38%",
+            backdropFilter: "blur(6px)",
+            WebkitBackdropFilter: "blur(6px)",
+            maskImage: "linear-gradient(to top, black 0%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to top, black 0%, transparent 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-x-0 bottom-0 z-10 pointer-events-none"
+          style={{
+            height: "55%",
+            backdropFilter: "blur(2px)",
+            WebkitBackdropFilter: "blur(2px)",
+            maskImage: "linear-gradient(to top, black 0%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to top, black 0%, transparent 100%)",
+          }}
+        />
 
         <div className="h-20" />
 
@@ -269,7 +640,7 @@ export default function StttockPage() {
           <h1
             className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-normal text-white leading-[1.0] tracking-tight mb-6 min-h-[3em]"
             style={{
-              fontFamily: 'var(--font-outfit), system-ui, sans-serif',
+              fontFamily: "var(--font-outfit), system-ui, sans-serif",
               opacity: heroReady ? 1 : 0,
               transition: "opacity 600ms cubic-bezier(0.16,1,0.3,1)",
             }}
@@ -298,20 +669,24 @@ export default function StttockPage() {
               opacity: heroReady ? 1 : 0,
               filter: heroReady ? "blur(0px)" : "blur(12px)",
               transform: heroReady ? "translateY(0px)" : "translateY(20px)",
-              transition: "opacity 0.9s cubic-bezier(0.16,1,0.3,1) 80ms, filter 0.9s cubic-bezier(0.16,1,0.3,1) 80ms, transform 0.9s cubic-bezier(0.16,1,0.3,1) 80ms",
+              transition:
+                "opacity 0.9s cubic-bezier(0.16,1,0.3,1) 80ms, filter 0.9s cubic-bezier(0.16,1,0.3,1) 80ms, transform 0.9s cubic-bezier(0.16,1,0.3,1) 80ms",
             }}
           >
-            Control de inventario, POS, reservas y proyecciones inteligentes en un solo lugar.
+            Control de inventario, POS, reservas y proyecciones inteligentes en
+            un solo lugar.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3"
+          <div
+            className="flex flex-col sm:flex-row gap-3"
             style={{
               opacity: heroReady ? 1 : 0,
               transform: heroReady ? "translateY(0px)" : "translateY(20px)",
-              transition: "opacity 0.8s cubic-bezier(0.16,1,0.3,1) 160ms, transform 0.8s cubic-bezier(0.16,1,0.3,1) 160ms",
+              transition:
+                "opacity 0.8s cubic-bezier(0.16,1,0.3,1) 160ms, transform 0.8s cubic-bezier(0.16,1,0.3,1) 160ms",
             }}
           >
-            <GlitchButton href="https://stttock-53y2oh2qiq-uc.a.run.app/auth/login">
+            <GlitchButton href="https://app.stttock.com/auth/login">
               30 días gratis <span className="ml-0.5">→</span>
             </GlitchButton>
             <a
@@ -328,14 +703,30 @@ export default function StttockPage() {
       <section
         id="problema"
         className="relative py-32 px-6 md:px-12 lg:px-20 overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #0d0d0f 0%, #131318 60%, #0f0f14 100%)" }}
+        style={{
+          background:
+            "linear-gradient(135deg, #0d0d0f 0%, #131318 60%, #0f0f14 100%)",
+        }}
       >
         {/* ambient glow blobs */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-          <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full opacity-20"
-            style={{ background: "radial-gradient(circle, rgba(120,80,255,0.35) 0%, transparent 70%)" }} />
-          <div className="absolute -bottom-24 right-0 w-[500px] h-[500px] rounded-full opacity-15"
-            style={{ background: "radial-gradient(circle, rgba(60,180,255,0.3) 0%, transparent 70%)" }} />
+        <div
+          className="pointer-events-none absolute inset-0 overflow-hidden"
+          aria-hidden
+        >
+          <div
+            className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full opacity-20"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(120,80,255,0.35) 0%, transparent 70%)",
+            }}
+          />
+          <div
+            className="absolute -bottom-24 right-0 w-[500px] h-[500px] rounded-full opacity-15"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(60,180,255,0.3) 0%, transparent 70%)",
+            }}
+          />
         </div>
 
         <div className="relative max-w-6xl mx-auto">
@@ -362,16 +753,27 @@ export default function StttockPage() {
                   backdropFilter: "blur(20px)",
                   WebkitBackdropFilter: "blur(20px)",
                   border: "1px solid rgba(255,255,255,0.09)",
-                  boxShadow: "0 4px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.07)",
+                  boxShadow:
+                    "0 4px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.07)",
                 }}
               >
                 {/* top highlight line */}
-                <div className="absolute inset-x-0 top-0 h-px"
-                  style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent)" }} />
+                <div
+                  className="absolute inset-x-0 top-0 h-px"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent)",
+                  }}
+                />
 
                 {/* hover glow */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none"
-                  style={{ background: "radial-gradient(circle at 50% 0%, rgba(150,100,255,0.08) 0%, transparent 60%)" }} />
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none"
+                  style={{
+                    background:
+                      "radial-gradient(circle at 50% 0%, rgba(150,100,255,0.08) 0%, transparent 60%)",
+                  }}
+                />
 
                 {/* icon */}
                 <div
@@ -385,8 +787,15 @@ export default function StttockPage() {
                   <Icon type={p.icon} />
                 </div>
 
-                <h3 className="text-xl font-light mb-3 leading-snug text-white/90">{p.title}</h3>
-                <p className="text-sm leading-relaxed mt-auto" style={{ color: "rgba(255,255,255,0.38)" }}>{p.desc}</p>
+                <h3 className="text-xl font-light mb-3 leading-snug text-white/90">
+                  {p.title}
+                </h3>
+                <p
+                  className="text-sm leading-relaxed mt-auto"
+                  style={{ color: "rgba(255,255,255,0.38)" }}
+                >
+                  {p.desc}
+                </p>
               </div>
             ))}
           </div>
@@ -394,22 +803,40 @@ export default function StttockPage() {
       </section>
 
       {/* ── HOW IT WORKS ──────────────────────────────────────────────────── */}
-      <section id="como-funciona" className="py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
+      <section
+        id="como-funciona"
+        className="py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]"
+      >
         <div className="max-w-6xl mx-auto">
           <div className="mb-16">
-            <div className="mb-4"><Tag>FLUJO</Tag></div>
+            <div className="mb-4">
+              <Tag>FLUJO</Tag>
+            </div>
             <RevealText className="text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
               {"Cómo funciona."}
             </RevealText>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3" onMouseMove={handleMouse}>
+          <div
+            className="grid grid-cols-1 md:grid-cols-4 gap-3"
+            onMouseMove={handleMouse}
+          >
             {steps.map((step, i) => (
-              <BentoCard key={step.n} className="relative overflow-hidden flex flex-col min-h-[260px]" delay={i * 60}>
+              <BentoCard
+                key={step.n}
+                className="relative overflow-hidden flex flex-col min-h-[260px]"
+                delay={i * 60}
+              >
                 <div className="relative z-10 p-7">
-                  <span className="font-pixel text-[11px] text-black/20 tracking-widest block mb-6">{step.n}</span>
-                  <h3 className="text-xl font-light mb-3 leading-snug">{step.title}</h3>
-                  <p className="text-sm text-black/45 leading-relaxed">{step.desc}</p>
+                  <span className="font-pixel text-[11px] text-black/20 tracking-widest block mb-6">
+                    {step.n}
+                  </span>
+                  <h3 className="text-xl font-light mb-3 leading-snug">
+                    {step.title}
+                  </h3>
+                  <p className="text-sm text-black/45 leading-relaxed">
+                    {step.desc}
+                  </p>
                 </div>
               </BentoCard>
             ))}
@@ -418,28 +845,45 @@ export default function StttockPage() {
       </section>
 
       {/* ── FEATURES GRID ─────────────────────────────────────────────────── */}
-      <section id="features" className="py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
+      <section
+        id="features"
+        className="py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]"
+      >
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16">
             <div>
-              <div className="mb-4"><Tag>FUNCIONALIDADES</Tag></div>
+              <div className="mb-4">
+                <Tag>FUNCIONALIDADES</Tag>
+              </div>
               <RevealText className="text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
                 {"Todo lo que necesitas."}
               </RevealText>
             </div>
             <p className="text-sm text-black/45 leading-relaxed max-w-xs">
-              Una sola plataforma para inventario, ventas, reservas y análisis — diseñada para la operación real de bares y restaurantes.
+              Una sola plataforma para inventario, ventas, reservas y análisis —
+              diseñada para la operación real de bares y restaurantes.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" onMouseMove={handleMouse}>
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
+            onMouseMove={handleMouse}
+          >
             {features.map((f, i) => (
-              <BentoCard key={f.title} className="p-7 flex flex-col" delay={i * 50}>
+              <BentoCard
+                key={f.title}
+                className="p-7 flex flex-col"
+                delay={i * 50}
+              >
                 <div className="w-10 h-10 rounded-xl border border-black/10 flex items-center justify-center mb-5 text-black/40">
                   <Icon type={f.icon} />
                 </div>
-                <h3 className="text-base font-light mb-2 leading-snug">{f.title}</h3>
-                <p className="text-sm text-black/40 leading-relaxed">{f.desc}</p>
+                <h3 className="text-base font-light mb-2 leading-snug">
+                  {f.title}
+                </h3>
+                <p className="text-sm text-black/40 leading-relaxed">
+                  {f.desc}
+                </p>
               </BentoCard>
             ))}
           </div>
@@ -451,7 +895,7 @@ export default function StttockPage() {
         <div className="max-w-6xl mx-auto px-6 md:px-12 lg:px-20 py-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
             {stats.map((s, i) => {
-              const { ref, inView } = useInView(0.2)
+              const { ref, inView } = useInView(0.2);
               return (
                 <div
                   key={s.value}
@@ -463,65 +907,110 @@ export default function StttockPage() {
                     transition: `opacity 0.7s ease ${i * 100}ms, transform 0.7s ease ${i * 100}ms`,
                   }}
                 >
-                  <div className="text-5xl md:text-6xl font-light text-white tracking-tight mb-3" style={{ fontFamily: '"IBM Plex Sans", sans-serif' }}>{s.value}</div>
-                  <div className="text-sm text-white/40 tracking-widest uppercase">{s.label}</div>
+                  <div
+                    className="text-5xl md:text-6xl font-light text-white tracking-tight mb-3"
+                    style={{ fontFamily: '"IBM Plex Sans", sans-serif' }}
+                  >
+                    {s.value}
+                  </div>
+                  <div className="text-sm text-white/40 tracking-widest uppercase">
+                    {s.label}
+                  </div>
                 </div>
-              )
+              );
             })}
           </div>
-          <p className="mt-12 text-xs text-white/20 tracking-widest">*basado en casos piloto</p>
+          <p className="mt-12 text-xs text-white/20 tracking-widest">
+            *basado en casos piloto
+          </p>
         </div>
       </section>
 
       {/* ── PRICING ───────────────────────────────────────────────────────── */}
-      <section id="precios" className="py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
+      <section
+        id="precios"
+        className="py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]"
+      >
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-4 flex flex-col items-center">
-            <div className="mb-4"><Tag>PRECIOS</Tag></div>
+            <div className="mb-4">
+              <Tag>PRECIOS</Tag>
+            </div>
             <RevealText className="text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
               {"Sin sorpresas."}
             </RevealText>
-            <p className="mt-3 text-sm text-black/40 tracking-wide">Cancela cuando quieras.</p>
+            <p className="mt-3 text-sm text-black/40 tracking-wide">
+              Cancela cuando quieras.
+            </p>
           </div>
 
           {/* Billing toggle */}
           <div className="flex items-center justify-center gap-4 mt-10 mb-12">
-            <span className={`text-sm transition-colors ${!billingAnnual ? "text-[#111]" : "text-black/35"}`}>Mensual</span>
+            <span
+              className={`text-sm transition-colors ${!billingAnnual ? "text-[#111]" : "text-black/35"}`}
+            >
+              Mensual
+            </span>
             <button
-              onClick={() => setBillingAnnual(v => !v)}
+              onClick={() => setBillingAnnual((v) => !v)}
               className="relative w-12 h-6 rounded-full border border-black/10 bg-white transition-colors"
             >
               <span
                 className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-[#111] transition-transform duration-200"
-                style={{ transform: billingAnnual ? "translateX(24px)" : "translateX(0)" }}
+                style={{
+                  transform: billingAnnual
+                    ? "translateX(24px)"
+                    : "translateX(0)",
+                }}
               />
             </button>
-            <span className={`text-sm transition-colors ${billingAnnual ? "text-[#111]" : "text-black/35"}`}>
-              Anual <span className="text-xs text-emerald-600 font-normal ml-1">–17%</span>
+            <span
+              className={`text-sm transition-colors ${billingAnnual ? "text-[#111]" : "text-black/35"}`}
+            >
+              Anual{" "}
+              <span className="text-xs text-emerald-600 font-normal ml-1">
+                –17%
+              </span>
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {plans.map((plan) => (
-              <PricingCard key={plan.name} plan={plan} billingAnnual={billingAnnual} />
+              <PricingCard
+                key={plan.name}
+                plan={plan}
+                billingAnnual={billingAnnual}
+              />
             ))}
           </div>
         </div>
       </section>
 
       {/* ── TESTIMONIALS ──────────────────────────────────────────────────── */}
-      <section id="testimonios" className="py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
+      <section
+        id="testimonios"
+        className="py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]"
+      >
         <div className="max-w-6xl mx-auto">
           <div className="mb-16">
-            <div className="mb-4"><Tag>CLIENTES</Tag></div>
+            <div className="mb-4">
+              <Tag>CLIENTES</Tag>
+            </div>
             <RevealText className="text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
               {"Lo que dicen nuestros\nclientes."}
             </RevealText>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3" onMouseMove={handleMouse}>
+          <div
+            className="grid grid-cols-1 md:grid-cols-3 gap-3"
+            onMouseMove={handleMouse}
+          >
             {testimonials.map((t, i) => (
-              <BentoCard key={t.name} className="p-8 flex flex-col" delay={i * 80}>
+              <BentoCard
+                key={t.name}
+                className="p-8 flex flex-col"
+                delay={i * 80}
+              >
                 <div className="mb-6 text-black/20">
                   <Icon type="quote" />
                 </div>
@@ -530,7 +1019,9 @@ export default function StttockPage() {
                 </p>
                 <div>
                   <div className="text-sm font-light text-[#111]">{t.name}</div>
-                  <div className="text-xs text-black/35 mt-0.5">{t.role} — {t.place}</div>
+                  <div className="text-xs text-black/35 mt-0.5">
+                    {t.role} — {t.place}
+                  </div>
                 </div>
               </BentoCard>
             ))}
@@ -539,10 +1030,15 @@ export default function StttockPage() {
       </section>
 
       {/* ── FAQ ───────────────────────────────────────────────────────────── */}
-      <section id="faq" className="py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
+      <section
+        id="faq"
+        className="py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]"
+      >
         <div className="max-w-3xl mx-auto">
           <div className="mb-16">
-            <div className="mb-4"><Tag>FAQ</Tag></div>
+            <div className="mb-4">
+              <Tag>FAQ</Tag>
+            </div>
             <RevealText className="text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
               {"Preguntas frecuentes."}
             </RevealText>
@@ -550,7 +1046,12 @@ export default function StttockPage() {
 
           <div>
             {faqs.map((item, i) => (
-              <AccordionItem key={i} index={i} question={item.q} answer={item.a} />
+              <AccordionItem
+                key={i}
+                index={i}
+                question={item.q}
+                answer={item.a}
+              />
             ))}
           </div>
         </div>
@@ -567,11 +1068,20 @@ export default function StttockPage() {
         />
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ maskImage: "linear-gradient(to top, transparent 0%, black 55%)", WebkitMaskImage: "linear-gradient(to top, transparent 0%, black 55%)", backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)" }}
+          style={{
+            maskImage: "linear-gradient(to top, transparent 0%, black 55%)",
+            WebkitMaskImage:
+              "linear-gradient(to top, transparent 0%, black 55%)",
+            backdropFilter: "blur(18px)",
+            WebkitBackdropFilter: "blur(18px)",
+          }}
         />
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(to top, rgb(245,244,240) 0%, rgba(245,244,240,0.92) 18%, rgba(245,244,240,0.55) 35%, transparent 55%)" }}
+          style={{
+            background:
+              "linear-gradient(to top, rgb(245,244,240) 0%, rgba(245,244,240,0.92) 18%, rgba(245,244,240,0.55) 35%, transparent 55%)",
+          }}
         />
         <div className="relative z-10 max-w-2xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-[1.05] mb-4">
@@ -581,7 +1091,7 @@ export default function StttockPage() {
             30 días gratis, sin tarjeta.
           </p>
           <a
-            href="https://stttock-53y2oh2qiq-uc.a.run.app/auth/login"
+            href="https://app.stttock.com/auth/login"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-[#111] text-white text-sm rounded-xl hover:bg-[#333] transition-colors tracking-widest font-medium"
@@ -595,36 +1105,71 @@ export default function StttockPage() {
       <footer className="py-12 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-10">
           <div>
-            <img src="/logo-light.png" alt="Stttock" className="h-6 w-auto mb-5" />
-            <p className="text-xs text-black/35 leading-relaxed">Gestión inteligente para bares y restaurantes en México.</p>
+            <img
+              src="/logo-light.png"
+              alt="Stttock"
+              className="h-6 w-auto mb-5"
+            />
+            <p className="text-xs text-black/35 leading-relaxed">
+              Gestión inteligente para bares y restaurantes en México.
+            </p>
           </div>
           <div>
-            <div className="text-[11px] tracking-widest text-black/25 uppercase mb-4">Producto</div>
+            <div className="text-[11px] tracking-widest text-black/25 uppercase mb-4">
+              Producto
+            </div>
             <ul className="space-y-2.5">
-              {["Features", "Precios"].map(l => (
-                <li key={l}><a href="#" className="text-xs text-black/45 hover:text-black transition-colors tracking-wide">{l}</a></li>
+              {["Features", "Precios"].map((l) => (
+                <li key={l}>
+                  <a
+                    href="#"
+                    className="text-xs text-black/45 hover:text-black transition-colors tracking-wide"
+                  >
+                    {l}
+                  </a>
+                </li>
               ))}
             </ul>
           </div>
           <div>
-            <div className="text-[11px] tracking-widest text-black/25 uppercase mb-4">Empresa</div>
+            <div className="text-[11px] tracking-widest text-black/25 uppercase mb-4">
+              Empresa
+            </div>
             <ul className="space-y-2.5">
-              {["Sobre nosotros", "Contacto"].map(l => (
-                <li key={l}><a href="#" className="text-xs text-black/45 hover:text-black transition-colors tracking-wide">{l}</a></li>
+              {["Sobre nosotros", "Contacto"].map((l) => (
+                <li key={l}>
+                  <a
+                    href="#"
+                    className="text-xs text-black/45 hover:text-black transition-colors tracking-wide"
+                  >
+                    {l}
+                  </a>
+                </li>
               ))}
             </ul>
           </div>
           <div>
-            <div className="text-[11px] tracking-widest text-black/25 uppercase mb-4">Legal</div>
+            <div className="text-[11px] tracking-widest text-black/25 uppercase mb-4">
+              Legal
+            </div>
             <ul className="space-y-2.5">
-              {["Términos", "Privacidad"].map(l => (
-                <li key={l}><a href="#" className="text-xs text-black/45 hover:text-black transition-colors tracking-wide">{l}</a></li>
+              {["Términos", "Privacidad"].map((l) => (
+                <li key={l}>
+                  <a
+                    href="#"
+                    className="text-xs text-black/45 hover:text-black transition-colors tracking-wide"
+                  >
+                    {l}
+                  </a>
+                </li>
               ))}
             </ul>
           </div>
         </div>
         <div className="max-w-6xl mx-auto mt-10 pt-6 border-t border-black/[0.04] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <span className="text-xs text-black/20">© 2025 Stttock. Todos los derechos reservados.</span>
+          <span className="text-xs text-black/20">
+            © 2025 Stttock. Todos los derechos reservados.
+          </span>
           <div className="flex items-center gap-1 text-xs text-black/25">
             <span>ES</span>
             <span className="mx-1 text-black/15">/</span>
@@ -632,7 +1177,6 @@ export default function StttockPage() {
           </div>
         </div>
       </footer>
-
     </div>
-  )
+  );
 }

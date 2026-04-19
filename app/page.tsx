@@ -7,6 +7,7 @@ import { MobileNav } from "@/components/mobile-nav"
 import { GlitchButton } from "@/components/glitch-button"
 import { TypewriterText } from "@/components/typewriter-text"
 import { PricingCard } from "@/components/pricing-card"
+import { useLang } from "@/lib/language-context"
 
 // ─── Intersection Observer hook ──────────────────────────────────────────────
 function useInView(threshold = 0.15) {
@@ -74,7 +75,7 @@ function Icon({ type }: { type: string }) {
   return <>{icons[type] ?? null}</>
 }
 
-// ─── Accordion item ──────────────────���───��───────────────────────────────────
+// ─── Accordion item ──────────────────�����───��───────────────────────────────────
 function AccordionItem({ question, answer, index }: { question: string; answer: string; index: number }) {
   const [open, setOpen] = useState(false)
   return (
@@ -104,6 +105,172 @@ function AccordionItem({ question, answer, index }: { question: string; answer: 
   )
 }
 
+// ─── Translations ─────────────────────────────────────────────────────────────
+const copy = {
+  es: {
+    heroLines: ["Gestión inteligente", { type: "break" as const }, "para bares y", { type: "break" as const }, "restaurantes."],
+    heroSub: "Control de inventario, POS, reservas y proyecciones inteligentes en un solo lugar.",
+    heroCta: "30 días gratis",
+    heroDemo: "Ver demo",
+    problemTag: "EL PROBLEMA",
+    problemTitle: "Lo que ya conoces.",
+    problems: [
+      { icon: "trending_down", title: "Mermas que nadie explica", desc: "Pérdidas de inventario sin rastro ni responsables claros." },
+      { icon: "users",         title: "Staff sin cuentas claras",   desc: "Turnos desorganizados y sin control de operaciones por rol." },
+      { icon: "package",       title: "Inventario que nunca cuadra", desc: "Conteos manuales que no coinciden con las ventas reales." },
+    ],
+    stepsTag: "FLUJO",
+    stepsTitle: "Cómo funciona.",
+    steps: [
+      { n: "01", title: "Sube tu menú",                   desc: "La IA detecta insumos automáticamente." },
+      { n: "02", title: "Tu equipo opera con roles y PIN", desc: "Control de acceso por nivel de responsabilidad." },
+      { n: "03", title: "Recibes alertas de stock y merma", desc: "Notificaciones en tiempo real cuando algo no cuadra." },
+      { n: "04", title: "Ves proyecciones y ROI real",     desc: "Datos accionables para tomar mejores decisiones." },
+    ],
+    featuresTag: "FUNCIONALIDADES",
+    featuresTitle: "Todo lo que necesitas.",
+    featuresSub: "Una sola plataforma para inventario, ventas, reservas y análisis — diseñada para la operación real de bares y restaurantes.",
+    features: [
+      { icon: "pos",      title: "POS con control por rol",   desc: "Admin, jefe de piso, jefe de barra, mesero." },
+      { icon: "brain",    title: "Menú con parser IA",        desc: "Extrae insumos automáticamente de tu carta." },
+      { icon: "bell",     title: "Alertas de stock",          desc: "Sugerencias de pedido basadas en consumo." },
+      { icon: "calendar", title: "Reservaciones",             desc: "Sync con OpenTable y otras plataformas." },
+      { icon: "chart",    title: "Proyecciones y ROI",        desc: "Calculadora de retorno de inversión real." },
+      { icon: "building", title: "Multi-sucursal",            desc: "Consolidación para cadenas de restaurantes." },
+      { icon: "percent",  title: "IVA configurable",          desc: "16% general o 8% zona fronteriza." },
+      { icon: "webhook",  title: "Webhooks seguros",          desc: "Replay protection para integraciones de pago." },
+    ],
+    stats: [
+      { value: "-30%",  label: "merma en 90 días" },
+      { value: "+2 hrs", label: "al día libres para el dueño" },
+      { value: "ROI+",  label: "positivo desde mes 2" },
+    ],
+    statsCaveat: "*basado en casos piloto",
+    pricingTag: "PRECIOS",
+    pricingTitle: "Sin sorpresas.",
+    pricingSub: "Cancela cuando quieras.",
+    billingMonthly: "Mensual",
+    billingAnnual: "Anual",
+    plans: [
+      { name: "Starter",    monthly: "$1,899", annual: "$1,499", period: "MXN/mes",         sub: "1 sucursal, 5 usuarios",   features: ["Inventario básico", "POS básico", "Reportes estándar", "Soporte por email"], cta: "Empezar gratis",       stripeKey: "starter" as const,  highlight: false, delay: 0 },
+      { name: "Business",   badge: "Más popular", monthly: "$3,499", annual: "$2,999", period: "MXN/mes", sub: "1 sucursal, 10 usuarios", features: ["Todo en Starter", "IA menú parser", "Reservaciones", "Alertas avanzadas", "Soporte prioritario"], cta: "Empezar gratis", stripeKey: "business" as const, highlight: true,  delay: 80 },
+      { name: "Cadena",     monthly: "desde $2,399", annual: "desde $2,399", period: "/sucursal/mes", sub: "2–5 sucursales", features: ["Todo en Business", "Consolidación multi-sucursal", "Reportes comparativos", "Account manager"], cta: "Solicitar cotización", leadPlan: "cadena" as const, highlight: false, delay: 140 },
+      { name: "Enterprise", monthly: "desde $4,500", annual: "desde $4,500", period: "base/mes",       sub: "6+ sucursales, SLA",  features: ["Todo en Cadena", "SLA garantizado", "Integraciones custom", "Onboarding dedicado"], cta: "Contactar", leadPlan: "enterprise" as const, highlight: false, delay: 200 },
+    ],
+    testimonialsTag: "CLIENTES",
+    testimonialsTitle: "Lo que dicen nuestros\nclientes.",
+    testimonials: [
+      { quote: "Redujimos las mermas un 35% en los primeros 3 meses. Ahora sé exactamente qué pasa en mi inventario.", name: "Ricardo Mendoza", role: "Operador", place: "Cantina La Reforma, CDMX" },
+      { quote: "El parser de menú nos ahorró semanas de trabajo. La IA detectó todos los insumos de nuestra carta en minutos.", name: "María Elena Ruiz", role: "Gerente General", place: "Mariscos El Puerto, Monterrey" },
+      { quote: "Por fin puedo irme tranquilo a casa. Las alertas me avisan si algo no cuadra en cualquiera de mis 4 sucursales.", name: "Carlos Vega", role: "Dueño", place: "Tacos Don Carlos, Guadalajara" },
+    ],
+    faqTag: "FAQ",
+    faqTitle: "Preguntas frecuentes.",
+    faqs: [
+      { q: "¿Qué pasa tras los 30 días?", a: "Tu prueba gratuita se convierte automáticamente en el plan que elijas. Te avisamos 3 días antes para que decidas si continuar. Sin compromisos." },
+      { q: "¿Puedo cancelar cuando quiera?", a: "Sí, puedes cancelar en cualquier momento desde tu panel de control. No hay penalizaciones ni cargos ocultos." },
+      { q: "¿Funciona sin internet?", a: "Stttock tiene modo offline para el POS. Las ventas se sincronizan automáticamente cuando vuelve la conexión." },
+      { q: "¿Qué tan rápido se implementa?", a: "La mayoría de nuestros clientes están operando en menos de 48 horas. Incluye migración de datos y capacitación del equipo." },
+      { q: "¿Cómo migro de mi sistema actual?", a: "Nuestro equipo de onboarding te ayuda a importar tu menú, inventario y configuraciones. El proceso es guiado y sin costo adicional." },
+      { q: "¿Facturan CFDI?", a: "Sí, emitimos facturas CFDI 4.0 con todos los requisitos fiscales mexicanos. Puedes solicitarlas desde tu panel." },
+      { q: "¿Hay app móvil?", a: "Sí, tenemos apps nativas para iOS y Android. Los meseros pueden tomar pedidos desde su celular o tablet." },
+      { q: "¿El soporte es en español?", a: "100% en español. Nuestro equipo de soporte está en México y entiende las necesidades locales del sector." },
+    ],
+    ctaTitle: "Empieza hoy.",
+    ctaSub: "30 días gratis, sin tarjeta.",
+    ctaBtn: "CREAR CUENTA →",
+    footerTagline: "Gestión inteligente para bares y restaurantes en México.",
+    footerProduct: "Producto",
+    footerProductLinks: ["Features", "Precios"],
+    footerCompany: "Empresa",
+    footerCompanyLinks: ["Sobre nosotros", "Contacto"],
+    footerLegal: "Legal",
+    footerLegalLinks: ["Términos", "Privacidad"],
+    footerCopy: "© 2025 Stttock. Todos los derechos reservados.",
+  },
+  en: {
+    heroLines: ["Intelligent management", { type: "break" as const }, "for bars and", { type: "break" as const }, "restaurants."],
+    heroSub: "Inventory control, POS, reservations, and smart projections — all in one place.",
+    heroCta: "30 days free",
+    heroDemo: "See demo",
+    problemTag: "THE PROBLEM",
+    problemTitle: "What you already know.",
+    problems: [
+      { icon: "trending_down", title: "Unexplained shrinkage", desc: "Inventory losses with no trail and no accountability." },
+      { icon: "users",         title: "Staff without clear accountability", desc: "Disorganized shifts with no role-based operation control." },
+      { icon: "package",       title: "Inventory that never adds up", desc: "Manual counts that never match actual sales." },
+    ],
+    stepsTag: "FLOW",
+    stepsTitle: "How it works.",
+    steps: [
+      { n: "01", title: "Upload your menu",           desc: "AI automatically detects ingredients." },
+      { n: "02", title: "Your team operates with roles & PIN", desc: "Access control by responsibility level." },
+      { n: "03", title: "Receive stock & shrinkage alerts", desc: "Real-time notifications when something is off." },
+      { n: "04", title: "View projections and real ROI", desc: "Actionable data to make better decisions." },
+    ],
+    featuresTag: "FEATURES",
+    featuresTitle: "Everything you need.",
+    featuresSub: "One platform for inventory, sales, reservations, and analytics — built for the real operation of bars and restaurants.",
+    features: [
+      { icon: "pos",      title: "Role-based POS",       desc: "Admin, floor manager, bar manager, waiter." },
+      { icon: "brain",    title: "AI menu parser",       desc: "Automatically extracts ingredients from your menu." },
+      { icon: "bell",     title: "Stock alerts",         desc: "Order suggestions based on consumption." },
+      { icon: "calendar", title: "Reservations",         desc: "Sync with OpenTable and other platforms." },
+      { icon: "chart",    title: "Projections & ROI",    desc: "Real return-on-investment calculator." },
+      { icon: "building", title: "Multi-location",       desc: "Consolidation for restaurant chains." },
+      { icon: "percent",  title: "Configurable tax",     desc: "16% standard or 8% border zone." },
+      { icon: "webhook",  title: "Secure webhooks",      desc: "Replay protection for payment integrations." },
+    ],
+    stats: [
+      { value: "-30%",  label: "shrinkage in 90 days" },
+      { value: "+2 hrs", label: "freed per day for the owner" },
+      { value: "ROI+",  label: "positive from month 2" },
+    ],
+    statsCaveat: "*based on pilot cases",
+    pricingTag: "PRICING",
+    pricingTitle: "No surprises.",
+    pricingSub: "Cancel anytime.",
+    billingMonthly: "Monthly",
+    billingAnnual: "Annual",
+    plans: [
+      { name: "Starter",    monthly: "$1,899", annual: "$1,499", period: "MXN/mo",         sub: "1 location, 5 users",   features: ["Basic inventory", "Basic POS", "Standard reports", "Email support"], cta: "Start free",       stripeKey: "starter" as const,  highlight: false, delay: 0 },
+      { name: "Business",   badge: "Most popular", monthly: "$3,499", annual: "$2,999", period: "MXN/mo", sub: "1 location, 10 users", features: ["Everything in Starter", "AI menu parser", "Reservations", "Advanced alerts", "Priority support"], cta: "Start free", stripeKey: "business" as const, highlight: true,  delay: 80 },
+      { name: "Chain",      monthly: "from $2,399", annual: "from $2,399", period: "/location/mo", sub: "2–5 locations", features: ["Everything in Business", "Multi-location consolidation", "Comparative reports", "Account manager"], cta: "Request quote", leadPlan: "cadena" as const, highlight: false, delay: 140 },
+      { name: "Enterprise", monthly: "from $4,500", annual: "from $4,500", period: "base/mo",       sub: "6+ locations, SLA",  features: ["Everything in Chain", "Guaranteed SLA", "Custom integrations", "Dedicated onboarding"], cta: "Contact us", leadPlan: "enterprise" as const, highlight: false, delay: 200 },
+    ],
+    testimonialsTag: "CLIENTS",
+    testimonialsTitle: "What our clients say.",
+    testimonials: [
+      { quote: "We reduced shrinkage by 35% in the first 3 months. Now I know exactly what's happening in my inventory.", name: "Ricardo Mendoza", role: "Operator", place: "Cantina La Reforma, CDMX" },
+      { quote: "The menu parser saved us weeks of work. The AI detected all the ingredients from our menu in minutes.", name: "María Elena Ruiz", role: "General Manager", place: "Mariscos El Puerto, Monterrey" },
+      { quote: "I can finally leave work at ease. Alerts notify me if anything is off at any of my 4 locations.", name: "Carlos Vega", role: "Owner", place: "Tacos Don Carlos, Guadalajara" },
+    ],
+    faqTag: "FAQ",
+    faqTitle: "Frequently asked questions.",
+    faqs: [
+      { q: "What happens after 30 days?", a: "Your free trial automatically converts to the plan you choose. We notify you 3 days in advance. No commitments." },
+      { q: "Can I cancel anytime?", a: "Yes, you can cancel at any time from your dashboard. No penalties or hidden charges." },
+      { q: "Does it work offline?", a: "Stttock has an offline mode for the POS. Sales sync automatically when the connection is restored." },
+      { q: "How fast is the setup?", a: "Most of our clients are up and running in under 48 hours. Includes data migration and team training." },
+      { q: "How do I migrate from my current system?", a: "Our onboarding team helps you import your menu, inventory, and settings. The process is guided and at no extra cost." },
+      { q: "Do you issue invoices?", a: "Yes, we issue CFDI 4.0 invoices with all Mexican tax requirements. You can request them from your dashboard." },
+      { q: "Is there a mobile app?", a: "Yes, we have native apps for iOS and Android. Waiters can take orders from their phone or tablet." },
+      { q: "Is support available in English?", a: "Our support team speaks both Spanish and English and understands the needs of the F&B industry." },
+    ],
+    ctaTitle: "Start today.",
+    ctaSub: "30 days free, no card required.",
+    ctaBtn: "CREATE ACCOUNT →",
+    footerTagline: "Intelligent management for bars and restaurants in Mexico.",
+    footerProduct: "Product",
+    footerProductLinks: ["Features", "Pricing"],
+    footerCompany: "Company",
+    footerCompanyLinks: ["About us", "Contact"],
+    footerLegal: "Legal",
+    footerLegalLinks: ["Terms", "Privacy"],
+    footerCopy: "© 2025 Stttock. All rights reserved.",
+  },
+}
+
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function StttockPage() {
   const [email, setEmail] = useState("")
@@ -111,6 +278,8 @@ export default function StttockPage() {
   const heroReady = true
   const videoReady = true
   const [billingAnnual, setBillingAnnual] = useState(false)
+  const { lang } = useLang()
+  const t = lang === "es" ? copy.es : copy.en
 
   const handleMouse = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = e.currentTarget
@@ -119,120 +288,8 @@ export default function StttockPage() {
     el.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`)
   }
 
-  // ─── Data ──────────────────────────────────────────────────────────────────
-  const problems = [
-    { icon: "trending_down", title: "Mermas que nadie explica", desc: "Pérdidas de inventario sin rastro ni responsables claros." },
-    { icon: "users",         title: "Staff sin cuentas claras",   desc: "Turnos desorganizados y sin control de operaciones por rol." },
-    { icon: "package",       title: "Inventario que nunca cuadra", desc: "Conteos manuales que no coinciden con las ventas reales." },
-  ]
-
-  const steps = [
-    { n: "01", title: "Sube tu menú",                   desc: "La IA detecta insumos automáticamente." },
-    { n: "02", title: "Tu equipo opera con roles y PIN", desc: "Control de acceso por nivel de responsabilidad." },
-    { n: "03", title: "Recibes alertas de stock y merma", desc: "Notificaciones en tiempo real cuando algo no cuadra." },
-    { n: "04", title: "Ves proyecciones y ROI real",     desc: "Datos accionables para tomar mejores decisiones." },
-  ]
-
-  const features = [
-    { icon: "pos",      title: "POS con control por rol",   desc: "Admin, jefe de piso, jefe de barra, mesero." },
-    { icon: "brain",    title: "Menú con parser IA",        desc: "Extrae insumos automáticamente de tu carta." },
-    { icon: "bell",     title: "Alertas de stock",          desc: "Sugerencias de pedido basadas en consumo." },
-    { icon: "calendar", title: "Reservaciones",             desc: "Sync con OpenTable y otras plataformas." },
-    { icon: "chart",    title: "Proyecciones y ROI",        desc: "Calculadora de retorno de inversión real." },
-    { icon: "building", title: "Multi-sucursal",            desc: "Consolidación para cadenas de restaurantes." },
-    { icon: "percent",  title: "IVA configurable",          desc: "16% general o 8% zona fronteriza." },
-    { icon: "webhook",  title: "Webhooks seguros",          desc: "Replay protection para integraciones de pago." },
-  ]
-
-  const stats = [
-    { value: "-30%",  label: "merma en 90 días" },
-    { value: "+2 hrs", label: "al día libres para el dueño" },
-    { value: "ROI+",  label: "positivo desde mes 2" },
-  ]
-
-  const plans = [
-    {
-      name: "Starter",
-      monthly: "$1,899",
-      annual: "$1,499",
-      period: "MXN/mes",
-      sub: "1 sucursal, 5 usuarios",
-      features: ["Inventario básico", "POS básico", "Reportes estándar", "Soporte por email"],
-      cta: "Empezar gratis",
-      stripeKey: "starter" as const,
-      highlight: false,
-      delay: 0,
-    },
-    {
-      name: "Business",
-      badge: "Más popular",
-      monthly: "$3,499",
-      annual: "$2,999",
-      period: "MXN/mes",
-      sub: "1 sucursal, 10 usuarios",
-      features: ["Todo en Starter", "IA menú parser", "Reservaciones", "Alertas avanzadas", "Soporte prioritario"],
-      cta: "Empezar gratis",
-      stripeKey: "business" as const,
-      highlight: true,
-      delay: 80,
-    },
-    {
-      name: "Cadena",
-      monthly: "desde $2,399",
-      annual: "desde $2,399",
-      period: "/sucursal/mes",
-      sub: "2–5 sucursales",
-      features: ["Todo en Business", "Consolidación multi-sucursal", "Reportes comparativos", "Account manager"],
-      cta: "Solicitar cotización",
-      leadPlan: "cadena" as const,
-      highlight: false,
-      delay: 140,
-    },
-    {
-      name: "Enterprise",
-      monthly: "desde $4,500",
-      annual: "desde $4,500",
-      period: "base/mes",
-      sub: "6+ sucursales, SLA",
-      features: ["Todo en Cadena", "SLA garantizado", "Integraciones custom", "Onboarding dedicado"],
-      cta: "Contactar",
-      leadPlan: "enterprise" as const,
-      highlight: false,
-      delay: 200,
-    },
-  ]
-
-  const testimonials = [
-    {
-      quote: "Redujimos las mermas un 35% en los primeros 3 meses. Ahora sé exactamente qué pasa en mi inventario.",
-      name: "Ricardo Mendoza",
-      role: "Operador",
-      place: "Cantina La Reforma, CDMX",
-    },
-    {
-      quote: "El parser de menú nos ahorró semanas de trabajo. La IA detectó todos los insumos de nuestra carta en minutos.",
-      name: "María Elena Ruiz",
-      role: "Gerente General",
-      place: "Mariscos El Puerto, Monterrey",
-    },
-    {
-      quote: "Por fin puedo irme tranquilo a casa. Las alertas me avisan si algo no cuadra en cualquiera de mis 4 sucursales.",
-      name: "Carlos Vega",
-      role: "Dueño",
-      place: "Tacos Don Carlos, Guadalajara",
-    },
-  ]
-
-  const faqs = [
-    { q: "¿Qué pasa tras los 30 días?", a: "Tu prueba gratuita se convierte automáticamente en el plan que elijas. Te avisamos 3 días antes para que decidas si continuar. Sin compromisos." },
-    { q: "¿Puedo cancelar cuando quiera?", a: "Sí, puedes cancelar en cualquier momento desde tu panel de control. No hay penalizaciones ni cargos ocultos." },
-    { q: "¿Funciona sin internet?", a: "Stttock tiene modo offline para el POS. Las ventas se sincronizan automáticamente cuando vuelve la conexión." },
-    { q: "¿Qué tan rápido se implementa?", a: "La mayoría de nuestros clientes están operando en menos de 48 horas. Incluye migración de datos y capacitación del equipo." },
-    { q: "¿Cómo migro de mi sistema actual?", a: "Nuestro equipo de onboarding te ayuda a importar tu menú, inventario y configuraciones. El proceso es guiado y sin costo adicional." },
-    { q: "¿Facturan CFDI?", a: "Sí, emitimos facturas CFDI 4.0 con todos los requisitos fiscales mexicanos. Puedes solicitarlas desde tu panel." },
-    { q: "¿Hay app móvil?", a: "Sí, tenemos apps nativas para iOS y Android. Los meseros pueden tomar pedidos desde su celular o tablet." },
-    { q: "¿El soporte es en español?", a: "100% en español. Nuestro equipo de soporte está en México y entiende las necesidades locales del sector." },
-  ]
+  // ─── Data from translations ────────────────────────────────────────────────
+  const { problems, steps, features, stats, plans, testimonials, faqs } = t
 
   return (
     <div className="bg-[#F5F4F0] text-[#111] min-h-screen font-sans antialiased">
@@ -275,20 +332,14 @@ export default function StttockPage() {
             }}
           >
             <TypewriterText
-              startDelay={450}
-              speed={55}
-              eraseSpeed={25}
-              holdAfterType={2200}
-              holdAfterErase={500}
-              loop
-              segments={[
-                "Gestión inteligente",
-                { type: "break" },
-                "para bares y",
-                { type: "break" },
-                "restaurantes.",
-              ]}
-            />
+                startDelay={450}
+                speed={55}
+                eraseSpeed={25}
+                holdAfterType={2200}
+                holdAfterErase={500}
+                loop
+                segments={t.heroLines}
+              />
           </h1>
 
           <p
@@ -301,7 +352,7 @@ export default function StttockPage() {
               transition: "opacity 0.9s cubic-bezier(0.16,1,0.3,1) 80ms, filter 0.9s cubic-bezier(0.16,1,0.3,1) 80ms, transform 0.9s cubic-bezier(0.16,1,0.3,1) 80ms",
             }}
           >
-            Control de inventario, POS, reservas y proyecciones inteligentes en un solo lugar.
+            {t.heroSub}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3"
@@ -312,13 +363,13 @@ export default function StttockPage() {
             }}
           >
             <GlitchButton href="https://stttock-53y2oh2qiq-uc.a.run.app/auth/login">
-              30 días gratis <span className="ml-0.5">→</span>
+              {t.heroCta} <span className="ml-0.5">→</span>
             </GlitchButton>
             <a
               href="#como-funciona"
               className="inline-flex items-center justify-center px-7 py-3.5 border border-black/10 text-black/60 text-sm rounded-xl hover:border-black/25 hover:text-black hover:bg-black/[0.04] transition-all tracking-widest"
             >
-              Ver demo
+              {t.heroDemo}
             </a>
           </div>
         </div>
@@ -343,11 +394,11 @@ export default function StttockPage() {
           <div className="mb-16">
             <div className="mb-4">
               <span className="inline-block font-pixel text-[10px] tracking-[0.22em] text-white/30 px-3 py-1.5 rounded-full border border-white/10 uppercase">
-                EL PROBLEMA
+                {t.problemTag}
               </span>
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-[1.05] text-white">
-              Lo que ya conoces.
+              {t.problemTitle}
             </h2>
           </div>
 
@@ -397,9 +448,9 @@ export default function StttockPage() {
       <section id="como-funciona" className="py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
         <div className="max-w-6xl mx-auto">
           <div className="mb-16">
-            <div className="mb-4"><Tag>FLUJO</Tag></div>
+            <div className="mb-4"><Tag>{t.stepsTag}</Tag></div>
             <RevealText className="text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
-              {"Cómo funciona."}
+              {t.stepsTitle}
             </RevealText>
           </div>
 
@@ -422,13 +473,13 @@ export default function StttockPage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16">
             <div>
-              <div className="mb-4"><Tag>FUNCIONALIDADES</Tag></div>
+              <div className="mb-4"><Tag>{t.featuresTag}</Tag></div>
               <RevealText className="text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
-                {"Todo lo que necesitas."}
+                {t.featuresTitle}
               </RevealText>
             </div>
             <p className="text-sm text-black/45 leading-relaxed max-w-xs">
-              Una sola plataforma para inventario, ventas, reservas y análisis — diseñada para la operación real de bares y restaurantes.
+              {t.featuresSub}
             </p>
           </div>
 
@@ -469,7 +520,7 @@ export default function StttockPage() {
               )
             })}
           </div>
-          <p className="mt-12 text-xs text-white/20 tracking-widest">*basado en casos piloto</p>
+          <p className="mt-12 text-xs text-white/20 tracking-widest">{t.statsCaveat}</p>
         </div>
       </section>
 
@@ -477,16 +528,16 @@ export default function StttockPage() {
       <section id="precios" className="py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-4 flex flex-col items-center">
-            <div className="mb-4"><Tag>PRECIOS</Tag></div>
+            <div className="mb-4"><Tag>{t.pricingTag}</Tag></div>
             <RevealText className="text-4xl md:text-5xl font-light tracking-tight leading-[1.05]">
-              {"Sin sorpresas."}
+              {t.pricingTitle}
             </RevealText>
-            <p className="mt-3 text-sm text-black/40 tracking-wide">Cancela cuando quieras.</p>
+            <p className="mt-3 text-sm text-black/40 tracking-wide">{t.pricingSub}</p>
           </div>
 
           {/* Billing toggle */}
           <div className="flex items-center justify-center gap-4 mt-10 mb-12">
-            <span className={`text-sm transition-colors ${!billingAnnual ? "text-[#111]" : "text-black/35"}`}>Mensual</span>
+            <span className={`text-sm transition-colors ${!billingAnnual ? "text-[#111]" : "text-black/35"}`}>{t.billingMonthly}</span>
             <button
               onClick={() => setBillingAnnual(v => !v)}
               className="relative w-12 h-6 rounded-full border border-black/10 bg-white transition-colors"

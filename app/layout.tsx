@@ -4,6 +4,7 @@ import { Geist, Geist_Mono, IBM_Plex_Sans, Afacad, Space_Grotesk, Outfit } from 
 import { Courier_Prime } from 'next/font/google'
 import localFont from 'next/font/local'
 import { Analytics } from '@vercel/analytics/next'
+import { LanguageProvider } from '@/lib/language-context'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -59,7 +60,9 @@ export default function RootLayout({
   return (
     <html lang="es-MX" className={`${afacad.variable} ${spaceGrotesk.variable} ${senseFont.variable} ${outfit.variable}`}>
       <body className={`font-sans antialiased`}>
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
         <Analytics />
       </body>
     </html>

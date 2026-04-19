@@ -30,11 +30,20 @@ export const metadata: Metadata = {
     type: 'website',
     url: 'https://stttock.com',
     siteName: 'Stttock',
+    images: [
+      {
+        url: 'https://stttock.com/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Stttock — Gestión inteligente para bares y restaurantes',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Stttock — Gestión inteligente para bares y restaurantes',
     description: 'Control de inventario, POS, reservas y proyecciones inteligentes en un solo lugar.',
+    images: ['https://stttock.com/og-image.jpg'],
   },
   icons: {
     icon: '/favicon.ico',

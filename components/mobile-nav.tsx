@@ -1,13 +1,22 @@
 "use client"
 
 import { useState } from "react"
+import { useLang } from "@/lib/language-context"
 
-const NAV_LINKS = [
-  { label: "Problema",    href: "#problema" },
+const NAV_LINKS_ES = [
+  { label: "Problema",      href: "#problema" },
   { label: "Cómo funciona", href: "#como-funciona" },
-  { label: "Features",    href: "#features" },
-  { label: "Precios",     href: "#precios" },
-  { label: "FAQ",         href: "#faq" },
+  { label: "Features",      href: "#features" },
+  { label: "Precios",       href: "#precios" },
+  { label: "FAQ",           href: "#faq" },
+]
+
+const NAV_LINKS_EN = [
+  { label: "Problem",    href: "#problema" },
+  { label: "How it works", href: "#como-funciona" },
+  { label: "Features",   href: "#features" },
+  { label: "Pricing",    href: "#precios" },
+  { label: "FAQ",        href: "#faq" },
 ]
 
 const NAV_STYLE = {
@@ -20,8 +29,11 @@ const NAV_STYLE = {
 
 export function MobileNav() {
   const [open, setOpen] = useState(false)
+  const { lang, toggle } = useLang()
 
   const close = () => setOpen(false)
+  const NAV_LINKS = lang === "es" ? NAV_LINKS_ES : NAV_LINKS_EN
+  const contactLabel = lang === "es" ? "CONTACTO" : "CONTACT"
 
   return (
     <div className="fixed top-4 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
@@ -50,8 +62,20 @@ export function MobileNav() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Language toggle — desktop */}
+            <button
+              onClick={toggle}
+              aria-label="Cambiar idioma"
+              className="hidden md:flex items-center gap-1 text-[11px] px-3 py-2 rounded-xl border border-black/10 text-black/50 hover:text-black hover:border-black/20 hover:bg-black/[0.03] transition-all duration-200 tracking-widest"
+              style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
+            >
+              <span className={lang === "es" ? "text-black" : "text-black/30"}>ES</span>
+              <span className="text-black/15 mx-0.5">/</span>
+              <span className={lang === "en" ? "text-black" : "text-black/30"}>EN</span>
+            </button>
+
             <a href="#precios" className="text-[11px] px-4 py-2 rounded-xl border border-black/10 text-black/60 hover:text-black hover:border-black/20 hover:bg-black/[0.03] transition-all duration-200 tracking-wide hidden md:block" style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>
-              CONTACTO
+              {contactLabel}
             </a>
 
             {/* Burger — mobile only */}
@@ -89,7 +113,7 @@ export function MobileNav() {
         {/* Mobile dropdown */}
         <div
           className="md:hidden mt-2 overflow-hidden transition-all duration-300 ease-in-out"
-          style={{ maxHeight: open ? "320px" : "0px", opacity: open ? 1 : 0 }}
+          style={{ maxHeight: open ? "380px" : "0px", opacity: open ? 1 : 0 }}
         >
           <div
             className="rounded-2xl border border-black/[0.06] px-2 py-2 flex flex-col"
@@ -106,10 +130,21 @@ export function MobileNav() {
                 {l.label}
               </a>
             ))}
-            <div className="mt-1 px-2 pb-1">
-              <a href="#precios" className="block text-center text-[11px] px-4 py-2.5 rounded-xl border border-black/10 text-black/60 hover:text-black hover:border-black/20 hover:bg-black/[0.03] transition-all duration-200 tracking-wide" style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>
-                CONTACTO
+            <div className="mt-1 px-2 pb-1 flex gap-2">
+              <a href="#precios" className="flex-1 block text-center text-[11px] px-4 py-2.5 rounded-xl border border-black/10 text-black/60 hover:text-black hover:border-black/20 hover:bg-black/[0.03] transition-all duration-200 tracking-wide" style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>
+                {contactLabel}
               </a>
+              {/* Language toggle — mobile */}
+              <button
+                onClick={toggle}
+                aria-label="Cambiar idioma"
+                className="flex items-center gap-1 text-[11px] px-4 py-2.5 rounded-xl border border-black/10 text-black/60 hover:text-black hover:border-black/20 hover:bg-black/[0.03] transition-all duration-200 tracking-widest"
+                style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}
+              >
+                <span className={lang === "es" ? "text-black" : "text-black/30"}>ES</span>
+                <span className="text-black/15 mx-0.5">/</span>
+                <span className={lang === "en" ? "text-black" : "text-black/30"}>EN</span>
+              </button>
             </div>
           </div>
         </div>

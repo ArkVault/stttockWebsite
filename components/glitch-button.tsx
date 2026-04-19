@@ -18,26 +18,16 @@ export function GlitchButton({
       href={href}
       className={`glass-cta group relative inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full text-sm tracking-widest font-medium overflow-hidden isolate ${className}`}
     >
-      {/* Spinning border glow — conic gradient that rotates on hover */}
+      {/* Border trace layer — only the 1.5px edge is visible (glass-base sits inset on hover) */}
       <span
         aria-hidden="true"
-        className="glass-border-glow absolute inset-0 rounded-full pointer-events-none"
+        className="glass-border-trace absolute inset-0 rounded-full pointer-events-none"
       />
 
-      {/* Base fill — transitions to green glass on hover */}
+      {/* Base fill */}
       <span
         aria-hidden="true"
         className="glass-base absolute inset-0 rounded-full"
-      />
-
-      {/* Inner depth shadow */}
-      <span
-        aria-hidden="true"
-        className="glass-depth absolute inset-0 rounded-full pointer-events-none"
-        style={{
-          boxShadow:
-            "inset 0 -10px 20px -10px rgba(0,0,0,0.55), inset 0 8px 16px -8px rgba(255,255,255,0.06)",
-        }}
       />
 
       {/* Top-edge specular highlight */}
@@ -46,27 +36,17 @@ export function GlitchButton({
         className="glass-specular absolute inset-x-0 top-0 h-1/2 rounded-t-full pointer-events-none"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 40%, rgba(255,255,255,0) 100%)",
+            "linear-gradient(to bottom, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 40%, transparent 100%)",
         }}
       />
 
-      {/* Diagonal sheen */}
+      {/* Diagonal sheen on hover */}
       <span
         aria-hidden="true"
-        className="glass-sheen absolute inset-0 rounded-full pointer-events-none opacity-0 transition-opacity duration-500 ease-out"
+        className="glass-sheen absolute inset-0 rounded-full pointer-events-none opacity-0"
         style={{
           background:
-            "linear-gradient(135deg, rgba(134,239,172,0.35) 0%, rgba(74,222,128,0.12) 38%, rgba(255,255,255,0) 60%, rgba(134,239,172,0.18) 100%)",
-        }}
-      />
-
-      {/* Inner ring */}
-      <span
-        aria-hidden="true"
-        className="glass-ring absolute inset-0 rounded-full pointer-events-none opacity-0 transition-opacity duration-500 ease-out"
-        style={{
-          boxShadow:
-            "inset 0 1.5px 0 0 rgba(134,239,172,0.65), inset 0 -1.5px 0 0 rgba(74,222,128,0.18), inset 0 0 0 1px rgba(74,222,128,0.28)",
+            "linear-gradient(135deg, rgba(187,247,208,0.28) 0%, rgba(74,222,128,0.08) 40%, transparent 65%)",
         }}
       />
 
@@ -74,19 +54,13 @@ export function GlitchButton({
       <span className="glass-label relative z-10 text-white">{children}</span>
 
       <style jsx>{`
-        @keyframes border-spin {
+        /* Light flare travels along the border perimeter */
+        @keyframes border-trace {
+          from {
+            transform: rotate(0deg);
+          }
           to {
             transform: rotate(360deg);
-          }
-        }
-
-        @keyframes glow-pulse {
-          0%,
-          100% {
-            opacity: 0.85;
-          }
-          50% {
-            opacity: 1;
           }
         }
 
@@ -98,22 +72,28 @@ export function GlitchButton({
             0 6px 14px -8px rgba(0, 0, 0, 0.28),
             0 18px 30px -18px rgba(0, 0, 0, 0.35);
           transition:
-            backdrop-filter 0.55s ease-out,
-            -webkit-backdrop-filter 0.55s ease-out,
-            box-shadow 0.55s ease-out,
-            transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+            backdrop-filter 0.5s ease-out,
+            -webkit-backdrop-filter 0.5s ease-out,
+            box-shadow 0.5s ease-out,
+            transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
           will-change: transform, box-shadow;
         }
 
-        /* ── Spinning border glow layer ────────────────────────── */
-        .glass-border-glow {
+        /* ── Border trace ──────────────────────────────────────── */
+        /* overflow:hidden clips the oversized spinning ::before to the pill shape */
+        .glass-border-trace {
           overflow: hidden;
           opacity: 0;
-          transition: opacity 0.45s ease-out;
+          transition: opacity 0.4s ease-out;
         }
 
-        /* The actual spinning conic gradient — 200% so it fills as it rotates */
-        .glass-border-glow::before {
+        /*
+          Spinning element — 220% so it always covers the pill as it rotates.
+          Conic gradient: almost entirely transparent with one tight bright flare.
+          The inset on glass-base exposes only the 1.5px edge, so only the flare
+          (and the static green base below) is visible at the border.
+        */
+        .glass-border-trace::before {
           content: "";
           position: absolute;
           inset: -60%;
@@ -122,30 +102,23 @@ export function GlitchButton({
           background: conic-gradient(
             from 0deg,
             transparent 0deg,
-            rgba(34, 197, 94, 0) 50deg,
-            rgba(74, 222, 128, 0.95) 80deg,
-            rgba(187, 247, 208, 1) 95deg,
-            rgba(255, 255, 255, 0.95) 105deg,
-            rgba(134, 239, 172, 0.7) 120deg,
-            transparent 160deg,
-            transparent 310deg,
-            rgba(34, 197, 94, 0.35) 345deg,
+            transparent 320deg,
+            rgba(134, 239, 172, 0.55) 340deg,
+            rgba(255, 255, 255, 0.95) 352deg,
+            rgba(187, 247, 208, 0.7) 357deg,
             transparent 360deg
           );
-          animation: border-spin 2.8s linear infinite;
+          animation: border-trace 2.4s linear infinite;
           will-change: transform;
         }
 
-        /* Outer glow halo that pulses behind the button */
-        .glass-border-glow::after {
+        /* Static green tint fills the border channel beneath the flare */
+        .glass-border-trace::after {
           content: "";
           position: absolute;
-          inset: 3px;
+          inset: 0;
           border-radius: inherit;
-          background: rgba(34, 197, 94, 0.18);
-          filter: blur(6px);
-          opacity: 0;
-          transition: opacity 0.45s ease-out;
+          background: rgba(34, 197, 94, 0.55);
         }
 
         /* ── Base fill ─────────────────────────────────────────── */
@@ -161,6 +134,10 @@ export function GlitchButton({
             inset 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
+        .glass-sheen {
+          transition: opacity 0.5s ease-out;
+        }
+
         .glass-label {
           text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
           transition:
@@ -168,35 +145,29 @@ export function GlitchButton({
             color 0.4s ease-out;
         }
 
-        /* ── Hover state ───────────────────────────────────────── */
+        /* ── Hover ─────────────────────────────────────────────── */
         .glass-cta:hover {
           transform: translateY(-1px);
-          -webkit-backdrop-filter: blur(18px) saturate(200%);
-          backdrop-filter: blur(18px) saturate(200%);
+          -webkit-backdrop-filter: blur(16px) saturate(180%);
+          backdrop-filter: blur(16px) saturate(180%);
           box-shadow:
-            0 2px 4px rgba(0, 0, 0, 0.08),
-            0 10px 24px -8px rgba(34, 197, 94, 0.3),
-            0 24px 44px -18px rgba(34, 197, 94, 0.2),
-            0 0 0 1px rgba(74, 222, 128, 0.15);
+            0 2px 6px rgba(0, 0, 0, 0.08),
+            0 8px 20px -8px rgba(34, 197, 94, 0.28),
+            0 20px 36px -16px rgba(34, 197, 94, 0.18);
         }
 
-        /* Expose 1.5px border channel so spinning layer bleeds through */
+        /* Green glass fill — inset 1.5px exposes the border channel */
         .glass-cta:hover .glass-base {
           inset: 1.5px;
           background: radial-gradient(
-            130% 180% at 50% -20%,
-            rgba(34, 197, 94, 0.38) 0%,
-            rgba(21, 128, 61, 0.28) 40%,
-            rgba(5, 46, 22, 0.32) 100%
+            130% 200% at 50% -10%,
+            rgba(74, 222, 128, 0.32) 0%,
+            rgba(21, 128, 61, 0.22) 50%,
+            rgba(5, 46, 22, 0.26) 100%
           );
         }
 
-        .glass-cta:hover .glass-border-glow {
-          opacity: 1;
-          animation: glow-pulse 2.2s ease-in-out infinite;
-        }
-
-        .glass-cta:hover .glass-border-glow::after {
+        .glass-cta:hover .glass-border-trace {
           opacity: 1;
         }
 
@@ -204,14 +175,10 @@ export function GlitchButton({
           opacity: 1;
         }
 
-        .glass-cta:hover .glass-ring {
-          opacity: 1;
-        }
-
         .glass-cta:hover .glass-label {
           text-shadow:
             0 1px 2px rgba(0, 0, 0, 0.3),
-            0 0 14px rgba(134, 239, 172, 0.45);
+            0 0 10px rgba(134, 239, 172, 0.4);
           color: #f0fdf4;
         }
 

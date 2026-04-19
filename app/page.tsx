@@ -311,7 +311,7 @@ export default function StttockPage() {
               transition: "opacity 0.8s cubic-bezier(0.16,1,0.3,1) 160ms, transform 0.8s cubic-bezier(0.16,1,0.3,1) 160ms",
             }}
           >
-            <GlitchButton href="#precios">
+            <GlitchButton href="https://stttock-53y2oh2qiq-uc.a.run.app/auth/login">
               30 días gratis <span className="ml-0.5">→</span>
             </GlitchButton>
             <a
@@ -580,32 +580,14 @@ export default function StttockPage() {
           <p className="text-sm text-black/45 leading-relaxed mb-10">
             30 días gratis, sin tarjeta.
           </p>
-          {!submitted ? (
-            <form
-              onSubmit={e => { e.preventDefault(); if (email) setSubmitted(true) }}
-              className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto"
-            >
-              <input
-                type="email"
-                placeholder="tu@correo.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-                className="flex-1 bg-white border border-black/10 rounded-xl px-4 py-3 text-sm text-[#111] placeholder:text-black/25 focus:outline-none focus:border-black/25 transition-colors"
-              />
-              <button
-                type="submit"
-                className="px-8 py-3 bg-[#111] text-white text-sm rounded-xl hover:bg-[#333] transition-colors tracking-widest font-medium"
-              >
-                CREAR CUENTA
-              </button>
-            </form>
-          ) : (
-            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-emerald-600/20 bg-emerald-50 text-emerald-700 text-sm">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              Cuenta creada. Te contactamos pronto.
-            </div>
-          )}
+          <a
+            href="https://stttock-53y2oh2qiq-uc.a.run.app/auth/login"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-[#111] text-white text-sm rounded-xl hover:bg-[#333] transition-colors tracking-widest font-medium"
+          >
+            CREAR CUENTA →
+          </a>
         </div>
       </section>
 

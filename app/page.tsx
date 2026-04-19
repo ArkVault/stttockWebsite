@@ -344,7 +344,7 @@ const copy = {
     ],
     heroSub:
       "Control de inventario, POS, reservas y proyecciones inteligentes en un solo lugar.",
-    heroCta: "30 días gratis",
+    heroCta: "21 días gratis",
     heroDemo: "Ver demo",
     problemTag: "EL PROBLEMA",
     problemTitle: "Lo que ya conoces.",
@@ -547,7 +547,7 @@ const copy = {
     faqTitle: "Preguntas frecuentes.",
     faqs: [
       {
-        q: "¿Qué pasa tras los 30 días?",
+        q: "¿Qué pasa tras los 21 días?",
         a: "Tu prueba gratuita se convierte automáticamente en el plan que elijas. Te avisamos 3 días antes para que decidas si continuar. Sin compromisos.",
       },
       {
@@ -580,7 +580,7 @@ const copy = {
       },
     ],
     ctaTitle: "Empieza hoy.",
-    ctaSub: "30 días gratis, sin tarjeta.",
+    ctaSub: "21 días gratis, sin tarjeta.",
     ctaBtn: "CREAR CUENTA →",
     footerTagline: "Gestión inteligente para bares y restaurantes en México.",
     footerProduct: "Producto",
@@ -1381,7 +1381,7 @@ export default function StttockPage() {
             Empieza hoy.
           </h2>
           <p className="text-sm text-black/45 leading-relaxed mb-10">
-            30 días gratis, sin tarjeta.
+            21 días gratis, sin tarjeta.
           </p>
           <a
             href="https://app.stttock.com/auth/login"

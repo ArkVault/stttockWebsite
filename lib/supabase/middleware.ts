@@ -25,8 +25,8 @@ export async function updateSession(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  // Protect /crm routes
-  if (request.nextUrl.pathname.startsWith('/crm') && !user) {
+  // Protect /crm routes (exclude login page itself to avoid redirect loop)
+  if (request.nextUrl.pathname.startsWith('/crm') && !request.nextUrl.pathname.startsWith('/crm/login') && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/crm/login'
     return NextResponse.redirect(url)

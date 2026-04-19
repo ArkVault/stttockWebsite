@@ -1,30 +1,8 @@
 import { updateSession } from '@/lib/supabase/middleware'
-import { createServerClient } from '@supabase/ssr'
-import { type NextRequest, NextResponse } from 'next/server'
+import { type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  const response = await updateSession(request)
-
-  // Protect /crm (except /crm/login)
-  const { pathname } = request.nextUrl
-  if (pathname.startsWith('/crm') && !pathname.startsWith('/crm/login')) {
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() { return request.cookies.getAll() },
-          setAll() {},
-        },
-      }
-    )
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      return NextResponse.redirect(new URL('/crm/login', request.url))
-    }
-  }
-
-  return response
+  return await updateSession(request)
 }
 
 export const runtime = 'nodejs'

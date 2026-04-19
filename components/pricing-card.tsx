@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { createCheckoutSession } from '@/app/actions/stripe'
+import { LeadModal } from '@/components/lead-modal'
 import type { PlanKey, BillingCycle } from '@/lib/plans'
 
 interface PricingCardProps {
@@ -14,8 +15,9 @@ interface PricingCardProps {
     sub: string
     features: string[]
     cta: string
-    stripeKey?: PlanKey       // if undefined → contact / mailto
-    contactHref?: string      // fallback for Cadena/Enterprise
+    stripeKey?: PlanKey
+    leadPlan?: "cadena" | "enterprise"   // opens lead modal instead
+    contactHref?: string
     highlight: boolean
     delay: number
   }
@@ -25,6 +27,7 @@ interface PricingCardProps {
 export function PricingCard({ plan, billingAnnual }: PricingCardProps) {
   const [pending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const [modalOpen, setModalOpen] = useState(false)
 
   const billing: BillingCycle = billingAnnual ? 'annual' : 'monthly'
   const price = billingAnnual ? plan.annual : plan.monthly
@@ -91,19 +94,27 @@ export function PricingCard({ plan, billingAnnual }: PricingCardProps) {
           {pending ? 'REDIRIGIENDO...' : plan.cta.toUpperCase()}
         </button>
       ) : (
-        <a
-          href={plan.contactHref}
-          className={`w-full py-3 rounded-xl text-sm tracking-widest text-center block transition-all duration-200 ${
+        <button
+          onClick={() => setModalOpen(true)}
+          className={`w-full py-3 rounded-xl text-sm tracking-widest transition-all duration-200 ${
             plan.highlight
               ? 'bg-white text-black hover:bg-white/90'
               : 'border border-black/10 text-black/60 hover:border-black/25 hover:text-black hover:bg-black/[0.04]'
           }`}
         >
           {plan.cta.toUpperCase()}
-        </a>
+        </button>
       )}
 
       {error && <p className="mt-2 text-xs text-red-500 text-center">{error}</p>}
+
+      {plan.leadPlan && (
+        <LeadModal
+          plan={plan.leadPlan}
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
     </div>
   )
 }

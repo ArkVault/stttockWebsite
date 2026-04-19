@@ -74,7 +74,7 @@ function Icon({ type }: { type: string }) {
   return <>{icons[type] ?? null}</>
 }
 
-// ─── Accordion item ──────────────────────��───────────────────────────────────
+// ─── Accordion item ──────────────────���───��───────────────────────────────────
 function AccordionItem({ question, answer, index }: { question: string; answer: string; index: number }) {
   const [open, setOpen] = useState(false)
   return (
@@ -184,7 +184,7 @@ export default function StttockPage() {
       sub: "2–5 sucursales",
       features: ["Todo en Business", "Consolidación multi-sucursal", "Reportes comparativos", "Account manager"],
       cta: "Solicitar cotización",
-      contactHref: "mailto:hola@stttock.com?subject=Cotización%20Plan%20Cadena",
+      leadPlan: "cadena" as const,
       highlight: false,
       delay: 140,
     },
@@ -196,7 +196,7 @@ export default function StttockPage() {
       sub: "6+ sucursales, SLA",
       features: ["Todo en Cadena", "SLA garantizado", "Integraciones custom", "Onboarding dedicado"],
       cta: "Contactar",
-      contactHref: "mailto:hola@stttock.com?subject=Plan%20Enterprise",
+      leadPlan: "enterprise" as const,
       highlight: false,
       delay: 200,
     },

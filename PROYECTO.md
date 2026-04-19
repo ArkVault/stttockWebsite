@@ -183,32 +183,54 @@ Clases Tailwind: `font-sans`, `font-mono`, `font-display`, `font-afacad`, `font-
 
 ## Flujo de Trabajo con v0 + GitHub
 
-### Rama activa en v0
+### Ramas
 
-v0 trabaja siempre en la rama: **`v0/uncuratedmail-3569-b8de122a`**
-La rama base es: **`main`**
+| Rama | Proposito |
+|---|---|
+| `main` | Produccion — `stttock.com` |
+| `deploying-and-managing` | Rama de trabajo activa en v0 |
 
-### Como hacer cambios desde v0
+### Flujo por sesion de v0
 
-1. Pide el cambio directamente en este chat de v0
-2. v0 edita los archivos y hace commit automatico a la rama `v0/uncuratedmail-3569-b8de122a`
-3. Vercel despliega un preview de esa rama automaticamente
-4. Cuando el cambio se ve bien en el preview → mergear a `main`
+Cada vez que se abre un **nuevo chat en v0**:
+
+1. v0 clona la rama **`main`** como punto de partida
+2. Los cambios se commitean automaticamente a **`deploying-and-managing`**
+3. Vercel genera un preview de esa rama automaticamente
+4. Cuando el preview se ve bien → mergear `deploying-and-managing` → `main`
+
+```
+[Nuevo chat en v0]
+      ↓
+  clona main
+      ↓
+  haces cambios
+      ↓
+  commit → deploying-and-managing
+      ↓
+  preview Vercel OK?
+      ↓
+  merge → main → stttock.com
+```
 
 ### Como mergear a main sin romper nada
 
-**Desde GitHub (recomendado):**
-1. Ir a **ArkVault/stttockWebsite** en GitHub
-2. Pull Request de `v0/uncuratedmail-3569-b8de122a` → `main`
-3. Revisar el build de Vercel en el PR
-4. Si el build pasa: **Merge**
-5. Vercel redespliega `main` automaticamente al dominio `stttock.com`
+**Opcion A — Desde v0:**
+1. Ir a **Settings** (engranaje arriba a la derecha)
+2. Seccion **Git** → crear Pull Request
+3. Mergear en GitHub
+
+**Opcion B — Desde GitHub directamente:**
+1. Ir a **ArkVault/stttockWebsite**
+2. Branch `deploying-and-managing` → "Compare & pull request"
+3. Verificar que el build de Vercel pase en el PR
+4. **Merge to main**
 
 **Reglas para no romper produccion:**
 - Nunca hacer push directo a `main`
 - Siempre verificar el preview de Vercel antes de mergear
 - Si se agregan variables de entorno nuevas, agregarlas en Vercel Dashboard ANTES de mergear
-- Si se crean nuevas migraciones SQL, ejecutarlas en Supabase ANTES de mergear (o simultaneamente)
+- Si se crean nuevas migraciones SQL, ejecutarlas en Supabase ANTES de mergear
 - No editar scripts SQL ya ejecutados, siempre crear uno nuevo con numero mayor
 
 ### Como agregar nuevas rutas o paginas

@@ -14,7 +14,7 @@ function getResend(): Resend | null {
 }
 
 const FROM_ADDRESS = "Stttock CRM <noreply@stttock.com>";
-const NOTIFY_TO = "hola@stttock.com";
+const NOTIFY_TO = "quotes@stttock.com";
 
 export async function sendLeadNotification(data: LeadFormData): Promise<void> {
   const resend = getResend();

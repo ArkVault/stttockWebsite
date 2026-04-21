@@ -33,10 +33,12 @@ function BentoCard({
   children,
   className = "",
   delay = 0,
+  accent,
 }: {
   children: React.ReactNode;
   className?: string;
   delay?: number;
+  accent?: string;
 }) {
   const { ref, inView } = useInView(0.1);
   return (
@@ -49,6 +51,14 @@ function BentoCard({
         transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms, border-color 0.3s ease, background-color 0.3s ease`,
       }}
     >
+      {accent && (
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: `radial-gradient(ellipse at top right, ${accent}18, transparent 65%)`,
+          }}
+        />
+      )}
       <div
         className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
         style={{
@@ -1404,6 +1414,7 @@ export default function StttockPage() {
                 key={f.title}
                 className="p-7 flex flex-col"
                 delay={i * 50}
+                accent={({ pos: "#3B82F6", brain: "#8B5CF6", bell: "#F59E0B", calendar: "#14B8A6", chart: "#10B981", building: "#F43F5E", percent: "#0EA5E9", webhook: "#6366F1" } as Record<string, string>)[f.icon]}
               >
                 <div className="w-10 h-10 rounded-xl border border-black/10 flex items-center justify-center mb-5 text-black/40">
                   <Icon type={f.icon} />

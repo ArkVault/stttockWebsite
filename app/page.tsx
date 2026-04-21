@@ -1444,13 +1444,15 @@ export default function StttockPage() {
                 delay={i * 50}
               >
                 {/* 3D abstract image — inset with rounded corners */}
-                <div className="mx-3 mt-3 rounded-2xl overflow-hidden flex-shrink-0" style={{ height: "190px" }}>
+                <div className="mx-3 mt-3 rounded-2xl overflow-hidden flex-shrink-0 relative" style={{ height: "190px" }}>
                   <img
                     src={`/images/feature-${f.icon}.jpg`}
                     alt={f.title}
                     className="w-full h-full object-cover"
+                    style={{ filter: "blur(1.5px)" }}
                     loading="lazy"
                   />
+                  <div className="absolute inset-0 bg-white/25 pointer-events-none" />
                 </div>
                 {/* Text */}
                 <div className="px-5 py-4 flex flex-col flex-1">

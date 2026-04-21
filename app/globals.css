@@ -215,3 +215,24 @@ html {
   from { transform: translateX(-33.333%); }
   to   { transform: translateX(0); }
 }
+
+/* Workflow dotted line travelling dot */
+@keyframes workflow-travel {
+  0%   { left: 0%; opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+/* Workflow dashed line dash-offset animation */
+@keyframes dash-march {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -30; }
+}
+
+.workflow-dash {
+  animation: dash-march 1.2s linear infinite;
+}
+.workflow-dash-v {
+  animation: dash-march 1.2s linear infinite;
+}

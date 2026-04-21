@@ -371,7 +371,7 @@ const copy = {
       {
         n: "01",
         title: "Sube tu menú",
-        desc: "La IA detecta insumos automáticamente.",
+        desc: "La IA detecta y mapea tus insumos automáticamente. Sin perder horas en migraciones. Te lo ponemos fácil.",
       },
       {
         n: "02",
@@ -1111,29 +1111,163 @@ export default function StttockPage() {
             </RevealText>
           </div>
 
-          <div
-            className="grid grid-cols-1 md:grid-cols-4 gap-3"
-            onMouseMove={handleMouse}
-          >
-            {steps.map((step, i) => (
-              <BentoCard
-                key={step.n}
-                className="relative overflow-hidden flex flex-col min-h-[260px]"
-                delay={i * 60}
+          {/* Desktop workflow */}
+          <div className="hidden md:block relative">
+            {/* Dotted connector line */}
+            <div className="absolute top-[52px] left-[calc(12.5%)] right-[calc(12.5%)] h-px z-10 pointer-events-none overflow-hidden">
+              <svg
+                width="100%"
+                height="2"
+                viewBox="0 0 100 2"
+                preserveAspectRatio="none"
+                className="w-full h-full"
               >
-                <div className="relative z-10 p-7">
-                  <span className="font-pixel text-[11px] text-black/20 tracking-widest block mb-6">
-                    {step.n}
-                  </span>
-                  <h3 className="text-xl font-light mb-3 leading-snug">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-black/45 leading-relaxed">
-                    {step.desc}
-                  </p>
+                <line
+                  x1="0"
+                  y1="1"
+                  x2="100"
+                  y2="1"
+                  stroke="#111"
+                  strokeOpacity="0.18"
+                  strokeWidth="1.5"
+                  strokeDasharray="5 5"
+                  className="workflow-dash"
+                />
+              </svg>
+              {/* Animated travelling dot */}
+              <span
+                className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-black/40"
+                style={{ animation: "workflow-travel 3s linear infinite" }}
+              />
+            </div>
+
+            <div
+              className="grid grid-cols-4 gap-3"
+              onMouseMove={handleMouse}
+            >
+              {steps.map((step, i) => {
+                // Subtle neutral→teal progression
+                const bgs = [
+                  "#ffffff",
+                  "#f9fafb",
+                  "#f3f8f7",
+                  "#eaf4f3",
+                ];
+                const borders = [
+                  "rgba(0,0,0,0.07)",
+                  "rgba(0,0,0,0.08)",
+                  "rgba(100,180,175,0.25)",
+                  "rgba(80,165,160,0.30)",
+                ];
+                return (
+                  <div
+                    key={step.n}
+                    className="group relative rounded-2xl overflow-hidden transition-all duration-700 flex flex-col min-h-[280px]"
+                    style={{
+                      background: bgs[i],
+                      border: `1px solid ${borders[i]}`,
+                      opacity: 0,
+                      animation: `fade-up 0.7s ease ${i * 80}ms forwards`,
+                    }}
+                  >
+                    {/* Step number node — sits on the connector line */}
+                    <div className="absolute -top-[18px] left-1/2 -translate-x-1/2 z-20 w-9 h-9 rounded-full border border-black/10 bg-white flex items-center justify-center shadow-sm">
+                      <span className="font-pixel text-[10px] text-black/35 tracking-widest">
+                        {step.n}
+                      </span>
+                    </div>
+
+                    <div className="relative z-10 p-7 pt-10 flex flex-col flex-1">
+                      <h3 className="text-[17px] font-light mb-3 leading-snug">
+                        {step.title}
+                      </h3>
+                      <p className="text-sm text-black/45 leading-relaxed">
+                        {step.desc}
+                      </p>
+                      {/* Progress indicator at bottom */}
+                      <div className="mt-auto pt-6">
+                        <div className="flex gap-1">
+                          {steps.map((_, j) => (
+                            <div
+                              key={j}
+                              className="h-[2px] flex-1 rounded-full transition-all duration-500"
+                              style={{
+                                background:
+                                  j <= i
+                                    ? `rgba(0,0,0,${0.12 + j * 0.06})`
+                                    : "rgba(0,0,0,0.05)",
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Mobile workflow — vertical with left dotted line */}
+          <div className="flex md:hidden flex-col relative pl-10">
+            {/* Vertical dotted line */}
+            <div className="absolute left-[18px] top-0 bottom-0 w-px overflow-hidden">
+              <svg
+                width="2"
+                height="100%"
+                viewBox="0 0 2 100"
+                preserveAspectRatio="none"
+                className="w-full h-full"
+              >
+                <line
+                  x1="1"
+                  y1="0"
+                  x2="1"
+                  y2="100"
+                  stroke="#111"
+                  strokeOpacity="0.18"
+                  strokeWidth="1.5"
+                  strokeDasharray="5 5"
+                  className="workflow-dash-v"
+                />
+              </svg>
+            </div>
+
+            {steps.map((step, i) => {
+              const mobileBgs = ["#ffffff", "#f9fafb", "#f3f8f7", "#eaf4f3"];
+              const mobileBorders = [
+                "rgba(0,0,0,0.07)",
+                "rgba(0,0,0,0.08)",
+                "rgba(100,180,175,0.25)",
+                "rgba(80,165,160,0.30)",
+              ];
+              return (
+                <div key={step.n} className="relative mb-4 last:mb-0">
+                  {/* Node dot */}
+                  <div className="absolute -left-10 top-6 w-9 h-9 rounded-full border border-black/10 bg-white flex items-center justify-center shadow-sm z-10">
+                    <span className="font-pixel text-[10px] text-black/35 tracking-widest">
+                      {step.n}
+                    </span>
+                  </div>
+                  <div
+                    className="rounded-2xl p-6"
+                    style={{
+                      background: mobileBgs[i],
+                      border: `1px solid ${mobileBorders[i]}`,
+                      opacity: 0,
+                      animation: `fade-up 0.6s ease ${i * 100}ms forwards`,
+                    }}
+                  >
+                    <h3 className="text-[17px] font-light mb-2 leading-snug">
+                      {step.title}
+                    </h3>
+                    <p className="text-sm text-black/45 leading-relaxed">
+                      {step.desc}
+                    </p>
+                  </div>
                 </div>
-              </BentoCard>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

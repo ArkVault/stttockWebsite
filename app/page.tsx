@@ -1409,24 +1409,52 @@ export default function StttockPage() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
             onMouseMove={handleMouse}
           >
-            {features.map((f, i) => (
+            {features.map((f, i) => {
+              const visual: Record<string, { from: string; via: string; to: string; shape: string }> = {
+                pos:      { from: "#DBEAFE", via: "#93C5FD", to: "#3B82F6", shape: "M0 60 Q40 20 80 50 Q120 80 160 40 L160 120 L0 120Z" },
+                brain:    { from: "#EDE9FE", via: "#C4B5FD", to: "#7C3AED", shape: "M20 80 Q60 20 100 60 Q140 100 160 30 L160 120 L0 120Z" },
+                bell:     { from: "#FEF3C7", via: "#FCD34D", to: "#F59E0B", shape: "M0 90 Q50 40 100 70 Q130 90 160 50 L160 120 L0 120Z" },
+                calendar: { from: "#CCFBF1", via: "#5EEAD4", to: "#0D9488", shape: "M0 70 Q30 30 80 60 Q110 80 160 35 L160 120 L0 120Z" },
+                chart:    { from: "#D1FAE5", via: "#6EE7B7", to: "#059669", shape: "M0 100 L40 60 L80 80 L120 30 L160 50 L160 120 L0 120Z" },
+                building: { from: "#FFE4E6", via: "#FDA4AF", to: "#F43F5E", shape: "M0 50 Q50 10 100 55 Q130 85 160 45 L160 120 L0 120Z" },
+                percent:  { from: "#E0F2FE", via: "#7DD3FC", to: "#0284C7", shape: "M0 80 Q40 50 90 65 Q120 75 160 40 L160 120 L0 120Z" },
+                webhook:  { from: "#E0E7FF", via: "#A5B4FC", to: "#4F46E5", shape: "M0 65 Q50 25 100 55 Q140 80 160 35 L160 120 L0 120Z" },
+              };
+              const v = visual[f.icon] ?? visual.pos;
+              return (
               <BentoCard
                 key={f.title}
-                className="p-7 flex flex-col"
+                className="flex flex-col overflow-hidden"
                 delay={i * 50}
-                accent={({ pos: "#3B82F6", brain: "#8B5CF6", bell: "#F59E0B", calendar: "#14B8A6", chart: "#10B981", building: "#F43F5E", percent: "#0EA5E9", webhook: "#6366F1" } as Record<string, string>)[f.icon]}
               >
-                <div className="w-10 h-10 rounded-xl border border-black/10 flex items-center justify-center mb-5 text-black/40">
-                  <Icon type={f.icon} />
+                {/* Color image block */}
+                <div className="relative w-full h-32 overflow-hidden flex-shrink-0">
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: `linear-gradient(135deg, ${v.from} 0%, ${v.via} 55%, ${v.to} 100%)` }}
+                  />
+                  <svg
+                    viewBox="0 0 160 120"
+                    className="absolute inset-0 w-full h-full"
+                    preserveAspectRatio="none"
+                  >
+                    <path d={v.shape} fill="white" fillOpacity="0.18" />
+                    <circle cx="130" cy="25" r="35" fill="white" fillOpacity="0.10" />
+                    <circle cx="20" cy="100" r="28" fill="white" fillOpacity="0.08" />
+                  </svg>
                 </div>
-                <h3 className="text-base font-light mb-2 leading-snug">
-                  {f.title}
-                </h3>
-                <p className="text-sm text-black/40 leading-relaxed">
-                  {f.desc}
-                </p>
+                {/* Text */}
+                <div className="p-5 flex flex-col flex-1">
+                  <h3 className="text-base font-light mb-2 leading-snug">
+                    {f.title}
+                  </h3>
+                  <p className="text-sm text-black/40 leading-relaxed">
+                    {f.desc}
+                  </p>
+                </div>
               </BentoCard>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

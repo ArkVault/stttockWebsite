@@ -713,8 +713,8 @@ const copy = {
       },
       {
         icon: "percent",
-        title: "IVA configurable",
-        desc: "16% general o 8% zona fronteriza.",
+        title: "Sistema holístico",
+        desc: "POS, Inventario automatizado, Diseñador de menus, Proyecciones inteligentes",
       },
       {
         icon: "webhook",
@@ -980,8 +980,8 @@ const copy = {
       },
       {
         icon: "percent",
-        title: "Configurable tax",
-        desc: "16% standard or 8% border zone.",
+        title: "Holistic system",
+        desc: "POS, automated inventory, menu designer, smart projections",
       },
       {
         icon: "webhook",

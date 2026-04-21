@@ -595,7 +595,7 @@ const copy = {
     heroSub:
       "Control de inventario, POS, reservas y proyecciones inteligentes en un solo lugar.",
     heroCta: "21 días gratis",
-    heroDemo: "Ver demo",
+    heroDemo: "¿Cómo funciona?",
     problemTag: "EL PROBLEMA",
     problemTitle: "Lo que ya conoces.",
     problems: [

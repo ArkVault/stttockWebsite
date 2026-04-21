@@ -1338,7 +1338,7 @@ export default function StttockPage() {
             {problems.map((p, i) => (
               <div
                 key={p.title}
-                className="group relative flex flex-col min-h-[240px] p-8 rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-1"
+                className={`group relative flex flex-col min-h-[240px] p-8 rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-1${i === problems.length - 1 && problems.length % 3 === 1 ? " md:col-start-2" : ""}`}
                 style={{
                   background: "rgba(255,255,255,0.04)",
                   backdropFilter: "blur(20px)",

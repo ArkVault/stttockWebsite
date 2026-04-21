@@ -70,6 +70,256 @@ function Tag({ children }: { children: React.ReactNode }) {
   );
 }
 
+// ─── Workflow Steps ───────────────────────────────────────────────────────────
+const STEP_IMAGES = [
+  "/images/step-01.jpg",
+  "/images/step-02.jpg",
+  "/images/step-03.jpg",
+  "/images/step-04.jpg",
+];
+
+const STEP_DURATION = 3000; // ms per step
+
+function WorkflowSteps({
+  steps,
+}: {
+  steps: { n: string; title: string; desc: string }[];
+}) {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const rafRef = useRef<number | null>(null);
+  const startRef = useRef<number | null>(null);
+  const activeRef = useRef(active);
+  activeRef.current = active;
+
+  useEffect(() => {
+    if (paused) {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      return;
+    }
+
+    const tick = (now: number) => {
+      if (!startRef.current) startRef.current = now;
+      const elapsed = now - startRef.current;
+      const pct = Math.min(elapsed / STEP_DURATION, 1);
+      setProgress(pct);
+      if (pct >= 1) {
+        startRef.current = null;
+        setProgress(0);
+        setActive((prev) => (prev + 1) % steps.length);
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [paused, steps.length]);
+
+  // Reset timer when active changes (e.g. manual click)
+  const goTo = (i: number) => {
+    startRef.current = null;
+    setProgress(0);
+    setActive(i);
+  };
+
+  return (
+    <>
+      {/* ── Desktop: Linear-style left list + right image ─────── */}
+      <div
+        className="hidden md:flex gap-16 items-stretch"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        {/* Left: step list */}
+        <div className="flex flex-col w-[340px] flex-shrink-0 relative">
+          {/* Vertical track line */}
+          <div className="absolute left-[15px] top-4 bottom-4 w-px bg-black/[0.07]" />
+
+          {steps.map((step, i) => {
+            const isActive = active === i;
+            const isDone = i < active;
+            return (
+              <button
+                key={step.n}
+                onClick={() => goTo(i)}
+                className="relative flex gap-5 items-start text-left py-6 pr-4 group transition-all duration-300"
+              >
+                {/* Node */}
+                <div className="relative flex-shrink-0 mt-0.5">
+                  {/* Animated fill segment on the track above this node */}
+                  {isActive && (
+                    <div
+                      className="absolute bottom-full left-1/2 -translate-x-1/2 w-px bg-black/40 origin-bottom"
+                      style={{
+                        height: "48px",
+                        transform: `scaleY(${progress}) translateX(-50%)`,
+                        transformOrigin: "bottom",
+                        transition: "none",
+                      }}
+                    />
+                  )}
+                  {isDone && (
+                    <div
+                      className="absolute bottom-full left-1/2 -translate-x-1/2 w-px bg-black/30"
+                      style={{ height: "48px" }}
+                    />
+                  )}
+                  {/* Circle node */}
+                  <div
+                    className="w-[30px] h-[30px] rounded-full border-2 flex items-center justify-center transition-all duration-400"
+                    style={{
+                      borderColor: isActive
+                        ? "rgba(0,0,0,0.55)"
+                        : isDone
+                        ? "rgba(0,0,0,0.20)"
+                        : "rgba(0,0,0,0.10)",
+                      background: isActive
+                        ? "rgba(0,0,0,0.06)"
+                        : "transparent",
+                    }}
+                  >
+                    {isDone ? (
+                      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                        <path
+                          d="M1 4L3.5 6.5L9 1"
+                          stroke="rgba(0,0,0,0.35)"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    ) : (
+                      <span
+                        className="font-pixel text-[8px] tracking-widest"
+                        style={{
+                          color: isActive
+                            ? "rgba(0,0,0,0.6)"
+                            : "rgba(0,0,0,0.25)",
+                        }}
+                      >
+                        {step.n}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Text */}
+                <div className="flex-1 min-w-0 pt-1">
+                  <div
+                    className="flex items-center gap-2 mb-1 transition-all duration-300"
+                    style={{
+                      color: isActive
+                        ? "rgba(0,0,0,0.85)"
+                        : "rgba(0,0,0,0.35)",
+                    }}
+                  >
+                    <h3 className="text-[15px] font-medium leading-snug">
+                      {step.title}
+                    </h3>
+                  </div>
+
+                  {/* Description — only shown when active */}
+                  <div
+                    className="overflow-hidden transition-all duration-500"
+                    style={{
+                      maxHeight: isActive ? "100px" : "0px",
+                      opacity: isActive ? 1 : 0,
+                    }}
+                  >
+                    <p className="text-[13px] text-black/45 leading-relaxed pt-0.5">
+                      {step.desc}
+                    </p>
+                    {/* Timer bar */}
+                    <div className="mt-3 h-[2px] rounded-full bg-black/06 overflow-hidden w-full">
+                      <div
+                        className="h-full rounded-full bg-black/30 origin-left"
+                        style={{
+                          width: `${progress * 100}%`,
+                          transition: paused ? "none" : "none",
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Right: image panel */}
+        <div className="flex-1 relative rounded-2xl overflow-hidden bg-black/[0.03] border border-black/[0.06] min-h-[440px]">
+          {steps.map((step, i) => (
+            <div
+              key={step.n}
+              className="absolute inset-0 transition-all duration-700"
+              style={{
+                opacity: active === i ? 1 : 0,
+                transform: active === i ? "scale(1)" : "scale(1.02)",
+                pointerEvents: active === i ? "auto" : "none",
+              }}
+            >
+              <img
+                src={STEP_IMAGES[i]}
+                alt={step.title}
+                className="w-full h-full object-cover"
+              />
+              {/* Bottom text overlay */}
+              <div
+                className="absolute bottom-0 left-0 right-0 p-8"
+                style={{
+                  background:
+                    "linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 100%)",
+                }}
+              >
+                <p className="text-white/90 text-[13px] font-light tracking-wide">
+                  {step.title}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Mobile: vertical stack with dotted line ──────────── */}
+      <div className="flex md:hidden flex-col relative pl-10">
+        <div className="absolute left-[15px] top-0 bottom-0 w-px bg-black/[0.07]" />
+
+        {steps.map((step, i) => (
+          <div key={step.n} className="relative mb-5 last:mb-0">
+            {/* Node */}
+            <div className="absolute -left-[34px] top-4 w-[30px] h-[30px] rounded-full border-2 border-black/15 bg-white flex items-center justify-center z-10">
+              <span className="font-pixel text-[8px] text-black/35 tracking-widest">
+                {step.n}
+              </span>
+            </div>
+
+            <div className="rounded-2xl overflow-hidden border border-black/[0.07] bg-white">
+              <div className="h-40 overflow-hidden">
+                <img
+                  src={STEP_IMAGES[i]}
+                  alt={step.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-5">
+                <h3 className="text-[15px] font-medium mb-1.5 leading-snug text-black/80">
+                  {step.title}
+                </h3>
+                <p className="text-[12px] text-black/40 leading-relaxed">
+                  {step.desc}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
 // ─── SVG icons ────────────────────────────────────────────────────────────────
 function Icon({ type }: { type: string }) {
   const icons: Record<string, React.ReactNode> = {
@@ -371,7 +621,7 @@ const copy = {
       {
         n: "01",
         title: "Sube tu menú",
-        desc: "La IA detecta insumos automáticamente.",
+        desc: "La IA detecta y mapea tus insumos automáticamente. Sin perder horas en migraciones. Te lo ponemos fácil.",
       },
       {
         n: "02",
@@ -380,11 +630,16 @@ const copy = {
       },
       {
         n: "03",
-        title: "Recibes alertas de stock y merma",
+        title: "Monitoreo de stock y merma de alta precisión",
         desc: "Notificaciones en tiempo real cuando algo no cuadra.",
       },
       {
         n: "04",
+        title: "Tu POS se unifica con tu inventario",
+        desc: "Cada venta descuenta insumos automáticamente. Sin doble captura, sin errores.",
+      },
+      {
+        n: "05",
         title: "Ves proyecciones y ROI real",
         desc: "Datos accionables para tomar mejores decisiones.",
       },
@@ -637,11 +892,16 @@ const copy = {
       },
       {
         n: "03",
-        title: "Receive stock & shrinkage alerts",
+        title: "High-precision stock & shrinkage monitoring",
         desc: "Real-time notifications when something is off.",
       },
       {
         n: "04",
+        title: "Your POS unifies with your inventory",
+        desc: "Every sale automatically deducts ingredients. No double entry, no errors.",
+      },
+      {
+        n: "05",
         title: "View projections and real ROI",
         desc: "Actionable data to make better decisions.",
       },
@@ -1111,30 +1371,7 @@ export default function StttockPage() {
             </RevealText>
           </div>
 
-          <div
-            className="grid grid-cols-1 md:grid-cols-4 gap-3"
-            onMouseMove={handleMouse}
-          >
-            {steps.map((step, i) => (
-              <BentoCard
-                key={step.n}
-                className="relative overflow-hidden flex flex-col min-h-[260px]"
-                delay={i * 60}
-              >
-                <div className="relative z-10 p-7">
-                  <span className="font-pixel text-[11px] text-black/20 tracking-widest block mb-6">
-                    {step.n}
-                  </span>
-                  <h3 className="text-xl font-light mb-3 leading-snug">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-black/45 leading-relaxed">
-                    {step.desc}
-                  </p>
-                </div>
-              </BentoCard>
-            ))}
-          </div>
+          <WorkflowSteps steps={steps} />
         </div>
       </section>
 
@@ -1219,7 +1456,7 @@ export default function StttockPage() {
         </div>
       </section>
 
-      {/* ── PRICING ───────────────────────────────────────────────────────── */}
+      {/* ── PRICING ───────────────────────────────────────────────���───────── */}
       <section
         id="precios"
         className="py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]"

@@ -1411,78 +1411,21 @@ export default function StttockPage() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
             onMouseMove={handleMouse}
           >
-            {features.map((f, i) => {
-              const IRIDESCENT: Record<string, string> = {
-                pos: `radial-gradient(ellipse at 20% 30%, rgba(139,92,246,0.85) 0%, transparent 52%),
-                      radial-gradient(ellipse at 78% 18%, rgba(6,182,212,0.80) 0%, transparent 48%),
-                      radial-gradient(ellipse at 65% 82%, rgba(99,102,241,0.75) 0%, transparent 52%),
-                      radial-gradient(ellipse at 25% 78%, rgba(45,212,191,0.65) 0%, transparent 45%),
-                      radial-gradient(ellipse at 50% 50%, rgba(168,85,247,0.40) 0%, transparent 55%),
-                      linear-gradient(145deg, #c8c0e8 0%, #d8d4f8 40%, #a898d0 100%)`,
-                brain: `radial-gradient(ellipse at 22% 22%, rgba(236,72,153,0.85) 0%, transparent 50%),
-                        radial-gradient(ellipse at 78% 28%, rgba(139,92,246,0.80) 0%, transparent 48%),
-                        radial-gradient(ellipse at 60% 80%, rgba(6,182,212,0.70) 0%, transparent 52%),
-                        radial-gradient(ellipse at 20% 75%, rgba(167,139,250,0.60) 0%, transparent 45%),
-                        radial-gradient(ellipse at 55% 45%, rgba(244,114,182,0.45) 0%, transparent 50%),
-                        linear-gradient(145deg, #e8c0e0 0%, #f5d4f0 40%, #c890c8 100%)`,
-                bell: `radial-gradient(ellipse at 25% 28%, rgba(245,158,11,0.85) 0%, transparent 50%),
-                       radial-gradient(ellipse at 75% 22%, rgba(52,211,153,0.75) 0%, transparent 48%),
-                       radial-gradient(ellipse at 70% 78%, rgba(251,191,36,0.70) 0%, transparent 52%),
-                       radial-gradient(ellipse at 20% 72%, rgba(16,185,129,0.60) 0%, transparent 45%),
-                       radial-gradient(ellipse at 48% 48%, rgba(234,179,8,0.45) 0%, transparent 50%),
-                       linear-gradient(145deg, #e8d8a0 0%, #f5ecc0 40%, #d0b870 100%)`,
-                calendar: `radial-gradient(ellipse at 20% 25%, rgba(20,184,166,0.85) 0%, transparent 50%),
-                            radial-gradient(ellipse at 80% 20%, rgba(99,102,241,0.75) 0%, transparent 48%),
-                            radial-gradient(ellipse at 68% 80%, rgba(6,182,212,0.75) 0%, transparent 52%),
-                            radial-gradient(ellipse at 22% 78%, rgba(45,212,191,0.65) 0%, transparent 45%),
-                            radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.45) 0%, transparent 55%),
-                            linear-gradient(145deg, #a8e8e0 0%, #c8f5f0 40%, #80c8c0 100%)`,
-                chart: `radial-gradient(ellipse at 18% 30%, rgba(16,185,129,0.85) 0%, transparent 50%),
-                         radial-gradient(ellipse at 80% 22%, rgba(139,92,246,0.70) 0%, transparent 48%),
-                         radial-gradient(ellipse at 65% 78%, rgba(52,211,153,0.75) 0%, transparent 52%),
-                         radial-gradient(ellipse at 25% 75%, rgba(6,182,212,0.60) 0%, transparent 45%),
-                         radial-gradient(ellipse at 50% 48%, rgba(5,150,105,0.45) 0%, transparent 55%),
-                         linear-gradient(145deg, #a8e8c0 0%, #c8f5d8 40%, #78c898 100%)`,
-                building: `radial-gradient(ellipse at 22% 28%, rgba(244,63,94,0.85) 0%, transparent 50%),
-                            radial-gradient(ellipse at 78% 20%, rgba(251,113,133,0.78) 0%, transparent 48%),
-                            radial-gradient(ellipse at 68% 78%, rgba(139,92,246,0.68) 0%, transparent 52%),
-                            radial-gradient(ellipse at 22% 75%, rgba(236,72,153,0.60) 0%, transparent 45%),
-                            radial-gradient(ellipse at 50% 50%, rgba(248,113,113,0.45) 0%, transparent 55%),
-                            linear-gradient(145deg, #f0c0cc 0%, #fdd8e0 40%, #d890a0 100%)`,
-                percent: `radial-gradient(ellipse at 20% 28%, rgba(14,165,233,0.85) 0%, transparent 50%),
-                           radial-gradient(ellipse at 80% 22%, rgba(6,182,212,0.80) 0%, transparent 48%),
-                           radial-gradient(ellipse at 65% 80%, rgba(99,102,241,0.68) 0%, transparent 52%),
-                           radial-gradient(ellipse at 25% 78%, rgba(56,189,248,0.60) 0%, transparent 45%),
-                           radial-gradient(ellipse at 50% 50%, rgba(2,132,199,0.45) 0%, transparent 55%),
-                           linear-gradient(145deg, #a0d8f8 0%, #c0eeff 40%, #78b8e8 100%)`,
-                webhook: `radial-gradient(ellipse at 22% 25%, rgba(99,102,241,0.85) 0%, transparent 50%),
-                           radial-gradient(ellipse at 78% 22%, rgba(139,92,246,0.78) 0%, transparent 48%),
-                           radial-gradient(ellipse at 65% 80%, rgba(20,184,166,0.68) 0%, transparent 52%),
-                           radial-gradient(ellipse at 22% 78%, rgba(79,70,229,0.60) 0%, transparent 45%),
-                           radial-gradient(ellipse at 50% 50%, rgba(124,58,237,0.45) 0%, transparent 55%),
-                           linear-gradient(145deg, #c0b8f0 0%, #d8d0ff 40%, #9888d8 100%)`,
-              };
-              const grad = IRIDESCENT[f.icon] ?? IRIDESCENT.pos;
-              return (
+            {features.map((f, i) => (
               <BentoCard
                 key={f.title}
                 sharp
                 className="flex flex-col"
                 delay={i * 50}
               >
-                {/* Iridescent image block — inset with rounded corners */}
-                <div className="mx-3 mt-3 rounded-2xl overflow-hidden flex-shrink-0" style={{ height: "180px" }}>
-                  <div className="w-full h-full relative">
-                    <div className="absolute inset-0" style={{ background: grad }} />
-                    {/* Specular shimmer overlay */}
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background: "linear-gradient(135deg, rgba(255,255,255,0.28) 0%, transparent 45%, rgba(255,255,255,0.12) 100%)",
-                        mixBlendMode: "overlay",
-                      }}
-                    />
-                  </div>
+                {/* 3D abstract image — inset with rounded corners */}
+                <div className="mx-3 mt-3 rounded-2xl overflow-hidden flex-shrink-0" style={{ height: "190px" }}>
+                  <img
+                    src={`/images/feature-${f.icon}.jpg`}
+                    alt={f.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
                 </div>
                 {/* Text */}
                 <div className="px-5 py-4 flex flex-col flex-1">
@@ -1494,8 +1437,7 @@ export default function StttockPage() {
                   </p>
                 </div>
               </BentoCard>
-              );
-            })}
+            ))}
           </div>
         </div>
       </section>

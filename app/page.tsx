@@ -70,6 +70,249 @@ function Tag({ children }: { children: React.ReactNode }) {
   );
 }
 
+// ─── Workflow Steps ───────────────────────────────────────────────────────────
+const STEP_IMAGES = [
+  "/images/step-01.jpg",
+  "/images/step-02.jpg",
+  "/images/step-03.jpg",
+  "/images/step-04.jpg",
+];
+
+const STEP_BGS = ["#ffffff", "#f9fafb", "#f3f8f7", "#eaf4f3"];
+const STEP_BORDERS = [
+  "rgba(0,0,0,0.07)",
+  "rgba(0,0,0,0.08)",
+  "rgba(100,180,175,0.22)",
+  "rgba(70,160,155,0.28)",
+];
+
+function WorkflowSteps({
+  steps,
+}: {
+  steps: { n: string; title: string; desc: string }[];
+}) {
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setActive((prev) => (prev + 1) % steps.length);
+    }, 2200);
+    return () => clearInterval(id);
+  }, [steps.length]);
+
+  return (
+    <>
+      {/* ── Desktop ─────────────────────────────────────────────── */}
+      <div className="hidden md:block relative">
+        {/* Dotted line running through card midpoints */}
+        <div
+          className="absolute left-[calc(12.5%+8px)] right-[calc(12.5%+8px)] pointer-events-none z-10"
+          style={{ top: "calc(50% - 1px)" }}
+        >
+          <svg
+            width="100%"
+            height="4"
+            style={{ overflow: "visible" }}
+          >
+            {/* Static dashed base */}
+            <line
+              x1="0"
+              y1="2"
+              x2="100%"
+              y2="2"
+              stroke="rgba(0,0,0,0.10)"
+              strokeWidth="1.5"
+              strokeDasharray="6 6"
+            />
+            {/* Animated marching dash overlay */}
+            <line
+              x1="0"
+              y1="2"
+              x2="100%"
+              y2="2"
+              stroke="rgba(0,0,0,0.22)"
+              strokeWidth="1.5"
+              strokeDasharray="6 6"
+              className="workflow-dash"
+            />
+          </svg>
+
+          {/* Travelling dot */}
+          <span
+            className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-black/35 shadow-sm"
+            style={{ animation: "workflow-travel 2.2s linear infinite" }}
+          />
+        </div>
+
+        <div className="grid grid-cols-4 gap-3">
+          {steps.map((step, i) => {
+            const isActive = active === i;
+            return (
+              <div
+                key={step.n}
+                className="relative rounded-2xl overflow-hidden flex flex-col transition-all duration-700 cursor-default"
+                style={{
+                  background: STEP_BGS[i],
+                  border: `1px solid ${isActive ? STEP_BORDERS[i].replace(/[\d.]+\)$/, "0.55)") : STEP_BORDERS[i]}`,
+                  boxShadow: isActive
+                    ? "0 8px 32px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)"
+                    : "none",
+                  transform: isActive ? "translateY(-4px)" : "translateY(0)",
+                  opacity: 0,
+                  animation: `fade-up 0.7s ease ${i * 80}ms forwards`,
+                }}
+                onMouseEnter={() => setActive(i)}
+              >
+                {/* Image top half */}
+                <div className="relative h-44 overflow-hidden flex-shrink-0">
+                  <img
+                    src={STEP_IMAGES[i]}
+                    alt={step.title}
+                    className="w-full h-full object-cover transition-transform duration-700"
+                    style={{ transform: isActive ? "scale(1.04)" : "scale(1)" }}
+                  />
+                  {/* Subtle gradient overlay so text is readable */}
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: `linear-gradient(to bottom, transparent 50%, ${STEP_BGS[i]} 100%)`,
+                    }}
+                  />
+                  {/* Step badge */}
+                  <div
+                    className="absolute top-3 left-3 w-8 h-8 rounded-full border bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm"
+                    style={{ borderColor: STEP_BORDERS[i] }}
+                  >
+                    <span className="font-pixel text-[9px] text-black/40 tracking-widest">
+                      {step.n}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Text bottom half */}
+                <div className="flex flex-col flex-1 p-5 pt-4">
+                  <h3 className="text-[15px] font-light leading-snug mb-2 text-black/80">
+                    {step.title}
+                  </h3>
+                  <p
+                    className="text-[12px] leading-relaxed transition-all duration-500"
+                    style={{
+                      color: isActive ? "rgba(0,0,0,0.55)" : "rgba(0,0,0,0.35)",
+                    }}
+                  >
+                    {step.desc}
+                  </p>
+
+                  {/* Bottom progress bar */}
+                  <div className="flex gap-1 mt-auto pt-4">
+                    {steps.map((_, j) => (
+                      <div
+                        key={j}
+                        className="h-[2px] flex-1 rounded-full transition-all duration-500"
+                        style={{
+                          background:
+                            j <= i
+                              ? `rgba(0,0,0,${0.10 + j * 0.055})`
+                              : "rgba(0,0,0,0.05)",
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Active glow ring */}
+                {isActive && (
+                  <div
+                    className="absolute inset-0 rounded-2xl pointer-events-none"
+                    style={{
+                      boxShadow: `inset 0 0 0 1.5px rgba(70,160,155,0.35)`,
+                    }}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Step dots indicator below */}
+        <div className="flex justify-center gap-2 mt-8">
+          {steps.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              className="rounded-full transition-all duration-400"
+              style={{
+                width: active === i ? "24px" : "6px",
+                height: "6px",
+                background:
+                  active === i ? "rgba(0,0,0,0.45)" : "rgba(0,0,0,0.12)",
+              }}
+              aria-label={`Paso ${i + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* ── Mobile ──────────────────────────────────────────────── */}
+      <div className="flex md:hidden flex-col relative pl-10">
+        {/* Vertical dotted line */}
+        <div className="absolute left-[18px] top-0 bottom-0 w-px overflow-hidden">
+          <svg width="2" height="100%" style={{ display: "block" }}>
+            <line
+              x1="1" y1="0" x2="1" y2="100%"
+              stroke="rgba(0,0,0,0.13)"
+              strokeWidth="1.5"
+              strokeDasharray="5 5"
+              className="workflow-dash-v"
+            />
+          </svg>
+        </div>
+
+        {steps.map((step, i) => (
+          <div key={step.n} className="relative mb-4 last:mb-0">
+            {/* Node dot */}
+            <div
+              className="absolute -left-10 top-5 w-8 h-8 rounded-full border bg-white flex items-center justify-center shadow-sm z-10"
+              style={{ borderColor: STEP_BORDERS[i] }}
+            >
+              <span className="font-pixel text-[9px] text-black/35 tracking-widest">
+                {step.n}
+              </span>
+            </div>
+
+            <div
+              className="rounded-2xl overflow-hidden"
+              style={{
+                background: STEP_BGS[i],
+                border: `1px solid ${STEP_BORDERS[i]}`,
+                opacity: 0,
+                animation: `fade-up 0.6s ease ${i * 100}ms forwards`,
+              }}
+            >
+              {/* Image */}
+              <div className="h-36 overflow-hidden">
+                <img
+                  src={STEP_IMAGES[i]}
+                  alt={step.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-5">
+                <h3 className="text-[16px] font-light mb-1.5 leading-snug text-black/80">
+                  {step.title}
+                </h3>
+                <p className="text-[12px] text-black/40 leading-relaxed">
+                  {step.desc}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
 // ─── SVG icons ────────────────────────────────────────────────────────────────
 function Icon({ type }: { type: string }) {
   const icons: Record<string, React.ReactNode> = {
@@ -1111,164 +1354,7 @@ export default function StttockPage() {
             </RevealText>
           </div>
 
-          {/* Desktop workflow */}
-          <div className="hidden md:block relative">
-            {/* Dotted connector line */}
-            <div className="absolute top-[52px] left-[calc(12.5%)] right-[calc(12.5%)] h-px z-10 pointer-events-none overflow-hidden">
-              <svg
-                width="100%"
-                height="2"
-                viewBox="0 0 100 2"
-                preserveAspectRatio="none"
-                className="w-full h-full"
-              >
-                <line
-                  x1="0"
-                  y1="1"
-                  x2="100"
-                  y2="1"
-                  stroke="#111"
-                  strokeOpacity="0.18"
-                  strokeWidth="1.5"
-                  strokeDasharray="5 5"
-                  className="workflow-dash"
-                />
-              </svg>
-              {/* Animated travelling dot */}
-              <span
-                className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-black/40"
-                style={{ animation: "workflow-travel 3s linear infinite" }}
-              />
-            </div>
-
-            <div
-              className="grid grid-cols-4 gap-3"
-              onMouseMove={handleMouse}
-            >
-              {steps.map((step, i) => {
-                // Subtle neutral→teal progression
-                const bgs = [
-                  "#ffffff",
-                  "#f9fafb",
-                  "#f3f8f7",
-                  "#eaf4f3",
-                ];
-                const borders = [
-                  "rgba(0,0,0,0.07)",
-                  "rgba(0,0,0,0.08)",
-                  "rgba(100,180,175,0.25)",
-                  "rgba(80,165,160,0.30)",
-                ];
-                return (
-                  <div
-                    key={step.n}
-                    className="group relative rounded-2xl overflow-hidden transition-all duration-700 flex flex-col min-h-[280px]"
-                    style={{
-                      background: bgs[i],
-                      border: `1px solid ${borders[i]}`,
-                      opacity: 0,
-                      animation: `fade-up 0.7s ease ${i * 80}ms forwards`,
-                    }}
-                  >
-                    {/* Step number node — sits on the connector line */}
-                    <div className="absolute -top-[18px] left-1/2 -translate-x-1/2 z-20 w-9 h-9 rounded-full border border-black/10 bg-white flex items-center justify-center shadow-sm">
-                      <span className="font-pixel text-[10px] text-black/35 tracking-widest">
-                        {step.n}
-                      </span>
-                    </div>
-
-                    <div className="relative z-10 p-7 pt-10 flex flex-col flex-1">
-                      <h3 className="text-[17px] font-light mb-3 leading-snug">
-                        {step.title}
-                      </h3>
-                      <p className="text-sm text-black/45 leading-relaxed">
-                        {step.desc}
-                      </p>
-                      {/* Progress indicator at bottom */}
-                      <div className="mt-auto pt-6">
-                        <div className="flex gap-1">
-                          {steps.map((_, j) => (
-                            <div
-                              key={j}
-                              className="h-[2px] flex-1 rounded-full transition-all duration-500"
-                              style={{
-                                background:
-                                  j <= i
-                                    ? `rgba(0,0,0,${0.12 + j * 0.06})`
-                                    : "rgba(0,0,0,0.05)",
-                              }}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Mobile workflow — vertical with left dotted line */}
-          <div className="flex md:hidden flex-col relative pl-10">
-            {/* Vertical dotted line */}
-            <div className="absolute left-[18px] top-0 bottom-0 w-px overflow-hidden">
-              <svg
-                width="2"
-                height="100%"
-                viewBox="0 0 2 100"
-                preserveAspectRatio="none"
-                className="w-full h-full"
-              >
-                <line
-                  x1="1"
-                  y1="0"
-                  x2="1"
-                  y2="100"
-                  stroke="#111"
-                  strokeOpacity="0.18"
-                  strokeWidth="1.5"
-                  strokeDasharray="5 5"
-                  className="workflow-dash-v"
-                />
-              </svg>
-            </div>
-
-            {steps.map((step, i) => {
-              const mobileBgs = ["#ffffff", "#f9fafb", "#f3f8f7", "#eaf4f3"];
-              const mobileBorders = [
-                "rgba(0,0,0,0.07)",
-                "rgba(0,0,0,0.08)",
-                "rgba(100,180,175,0.25)",
-                "rgba(80,165,160,0.30)",
-              ];
-              return (
-                <div key={step.n} className="relative mb-4 last:mb-0">
-                  {/* Node dot */}
-                  <div className="absolute -left-10 top-6 w-9 h-9 rounded-full border border-black/10 bg-white flex items-center justify-center shadow-sm z-10">
-                    <span className="font-pixel text-[10px] text-black/35 tracking-widest">
-                      {step.n}
-                    </span>
-                  </div>
-                  <div
-                    className="rounded-2xl p-6"
-                    style={{
-                      background: mobileBgs[i],
-                      border: `1px solid ${mobileBorders[i]}`,
-                      opacity: 0,
-                      animation: `fade-up 0.6s ease ${i * 100}ms forwards`,
-                    }}
-                  >
-                    <h3 className="text-[17px] font-light mb-2 leading-snug">
-                      {step.title}
-                    </h3>
-                    <p className="text-sm text-black/45 leading-relaxed">
-                      {step.desc}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <WorkflowSteps steps={steps} />
         </div>
       </section>
 

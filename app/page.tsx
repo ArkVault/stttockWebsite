@@ -1501,38 +1501,59 @@ export default function StttockPage() {
       </section>
 
       {/* ── STATS BAND ────────────────────────────────────────────────────── */}
-      <section className="py-0 border-t border-black/[0.06] bg-[#111]">
-        <div className="max-w-6xl mx-auto px-6 md:px-12 lg:px-20 py-20">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
-            {stats.map((s, i) => {
-              const { ref, inView } = useInView(0.2);
-              return (
-                <div
-                  key={s.value}
-                  ref={ref}
-                  className="flex flex-col items-center md:items-start text-center md:text-left"
-                  style={{
-                    opacity: inView ? 1 : 0,
-                    transform: inView ? "translateY(0)" : "translateY(24px)",
-                    transition: `opacity 0.7s ease ${i * 100}ms, transform 0.7s ease ${i * 100}ms`,
-                  }}
-                >
+      <section className="relative overflow-hidden border-t border-black/[0.06]">
+        {/* Same hero video replayed as background */}
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/9150545-hd_1920_1080_24fps-XUizsTD4O2M8GD1bjGYiFDNA2rMHD7.mp4"
+        />
+        {/* Apple-style glass layer */}
+        <div
+          className="relative"
+          style={{
+            backdropFilter: "blur(48px) saturate(160%) brightness(1.08)",
+            WebkitBackdropFilter: "blur(48px) saturate(160%) brightness(1.08)",
+            background: "rgba(255,255,255,0.52)",
+            borderTop: "1px solid rgba(255,255,255,0.65)",
+            borderBottom: "1px solid rgba(255,255,255,0.40)",
+          }}
+        >
+          <div className="max-w-6xl mx-auto px-6 md:px-12 lg:px-20 py-20">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+              {stats.map((s, i) => {
+                const { ref, inView } = useInView(0.2);
+                return (
                   <div
-                    className="text-5xl md:text-6xl font-light text-white tracking-tight mb-3"
-                    style={{ fontFamily: '"IBM Plex Sans", sans-serif' }}
+                    key={s.value}
+                    ref={ref}
+                    className="flex flex-col items-center md:items-start text-center md:text-left"
+                    style={{
+                      opacity: inView ? 1 : 0,
+                      transform: inView ? "translateY(0)" : "translateY(24px)",
+                      transition: `opacity 0.7s ease ${i * 100}ms, transform 0.7s ease ${i * 100}ms`,
+                    }}
                   >
-                    {s.value}
+                    <div
+                      className="text-5xl md:text-6xl font-light text-[#111] tracking-tight mb-3"
+                      style={{ fontFamily: '"IBM Plex Sans", sans-serif' }}
+                    >
+                      {s.value}
+                    </div>
+                    <div className="text-sm text-black/55 tracking-widest uppercase">
+                      {s.label}
+                    </div>
                   </div>
-                  <div className="text-sm text-white/40 tracking-widest uppercase">
-                    {s.label}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+            <p className="mt-12 text-xs text-black/30 tracking-widest">
+              {t.statsCaveat}
+            </p>
           </div>
-          <p className="mt-12 text-xs text-white/20 tracking-widest">
-            {t.statsCaveat}
-          </p>
         </div>
       </section>
 

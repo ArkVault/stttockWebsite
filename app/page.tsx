@@ -630,11 +630,16 @@ const copy = {
       },
       {
         n: "03",
-        title: "Recibes alertas de stock y merma",
+        title: "Monitoreo de stock y merma de alta precisión",
         desc: "Notificaciones en tiempo real cuando algo no cuadra.",
       },
       {
         n: "04",
+        title: "Tu POS se unifica con tu inventario",
+        desc: "Cada venta descuenta insumos automáticamente. Sin doble captura, sin errores.",
+      },
+      {
+        n: "05",
         title: "Ves proyecciones y ROI real",
         desc: "Datos accionables para tomar mejores decisiones.",
       },
@@ -887,11 +892,16 @@ const copy = {
       },
       {
         n: "03",
-        title: "Receive stock & shrinkage alerts",
+        title: "High-precision stock & shrinkage monitoring",
         desc: "Real-time notifications when something is off.",
       },
       {
         n: "04",
+        title: "Your POS unifies with your inventory",
+        desc: "Every sale automatically deducts ingredients. No double entry, no errors.",
+      },
+      {
+        n: "05",
         title: "View projections and real ROI",
         desc: "Actionable data to make better decisions.",
       },

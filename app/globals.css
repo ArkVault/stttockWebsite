@@ -216,23 +216,4 @@ html {
   to   { transform: translateX(0); }
 }
 
-/* Workflow travelling dot — cycles in sync with the 2.2s step timer */
-@keyframes workflow-travel {
-  0%   { left: -2%;  opacity: 0; }
-  4%   { opacity: 1; }
-  96%  { opacity: 1; }
-  100% { left: 102%; opacity: 0; }
-}
 
-/* Marching dashes */
-@keyframes dash-march {
-  from { stroke-dashoffset: 0; }
-  to   { stroke-dashoffset: -24; }
-}
-
-.workflow-dash {
-  animation: dash-march 0.9s linear infinite;
-}
-.workflow-dash-v {
-  animation: dash-march 0.9s linear infinite;
-}

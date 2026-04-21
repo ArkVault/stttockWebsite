@@ -78,13 +78,7 @@ const STEP_IMAGES = [
   "/images/step-04.jpg",
 ];
 
-const STEP_BGS = ["#ffffff", "#f9fafb", "#f3f8f7", "#eaf4f3"];
-const STEP_BORDERS = [
-  "rgba(0,0,0,0.07)",
-  "rgba(0,0,0,0.08)",
-  "rgba(100,180,175,0.22)",
-  "rgba(70,160,155,0.28)",
-];
+const STEP_DURATION = 3000; // ms per step
 
 function WorkflowSteps({
   steps,
@@ -92,205 +86,218 @@ function WorkflowSteps({
   steps: { n: string; title: string; desc: string }[];
 }) {
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const rafRef = useRef<number | null>(null);
+  const startRef = useRef<number | null>(null);
+  const activeRef = useRef(active);
+  activeRef.current = active;
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setActive((prev) => (prev + 1) % steps.length);
-    }, 2200);
-    return () => clearInterval(id);
-  }, [steps.length]);
+    if (paused) {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      return;
+    }
+
+    const tick = (now: number) => {
+      if (!startRef.current) startRef.current = now;
+      const elapsed = now - startRef.current;
+      const pct = Math.min(elapsed / STEP_DURATION, 1);
+      setProgress(pct);
+      if (pct >= 1) {
+        startRef.current = null;
+        setProgress(0);
+        setActive((prev) => (prev + 1) % steps.length);
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [paused, steps.length]);
+
+  // Reset timer when active changes (e.g. manual click)
+  const goTo = (i: number) => {
+    startRef.current = null;
+    setProgress(0);
+    setActive(i);
+  };
 
   return (
     <>
-      {/* ── Desktop ─────────────────────────────────────────────── */}
-      <div className="hidden md:block relative">
-        {/* Dotted line running through card midpoints */}
-        <div
-          className="absolute left-[calc(12.5%+8px)] right-[calc(12.5%+8px)] pointer-events-none z-10"
-          style={{ top: "calc(50% - 1px)" }}
-        >
-          <svg
-            width="100%"
-            height="4"
-            style={{ overflow: "visible" }}
-          >
-            {/* Static dashed base */}
-            <line
-              x1="0"
-              y1="2"
-              x2="100%"
-              y2="2"
-              stroke="rgba(0,0,0,0.10)"
-              strokeWidth="1.5"
-              strokeDasharray="6 6"
-            />
-            {/* Animated marching dash overlay */}
-            <line
-              x1="0"
-              y1="2"
-              x2="100%"
-              y2="2"
-              stroke="rgba(0,0,0,0.22)"
-              strokeWidth="1.5"
-              strokeDasharray="6 6"
-              className="workflow-dash"
-            />
-          </svg>
+      {/* ── Desktop: Linear-style left list + right image ─────── */}
+      <div
+        className="hidden md:flex gap-16 items-stretch"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        {/* Left: step list */}
+        <div className="flex flex-col w-[340px] flex-shrink-0 relative">
+          {/* Vertical track line */}
+          <div className="absolute left-[15px] top-4 bottom-4 w-px bg-black/[0.07]" />
 
-          {/* Travelling dot */}
-          <span
-            className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-black/35 shadow-sm"
-            style={{ animation: "workflow-travel 2.2s linear infinite" }}
-          />
-        </div>
-
-        <div className="grid grid-cols-4 gap-3">
           {steps.map((step, i) => {
             const isActive = active === i;
+            const isDone = i < active;
             return (
-              <div
+              <button
                 key={step.n}
-                className="relative rounded-2xl overflow-hidden flex flex-col transition-all duration-700 cursor-default"
-                style={{
-                  background: STEP_BGS[i],
-                  border: `1px solid ${isActive ? STEP_BORDERS[i].replace(/[\d.]+\)$/, "0.55)") : STEP_BORDERS[i]}`,
-                  boxShadow: isActive
-                    ? "0 8px 32px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)"
-                    : "none",
-                  transform: isActive ? "translateY(-4px)" : "translateY(0)",
-                  opacity: 0,
-                  animation: `fade-up 0.7s ease ${i * 80}ms forwards`,
-                }}
-                onMouseEnter={() => setActive(i)}
+                onClick={() => goTo(i)}
+                className="relative flex gap-5 items-start text-left py-6 pr-4 group transition-all duration-300"
               >
-                {/* Image top half */}
-                <div className="relative h-44 overflow-hidden flex-shrink-0">
-                  <img
-                    src={STEP_IMAGES[i]}
-                    alt={step.title}
-                    className="w-full h-full object-cover transition-transform duration-700"
-                    style={{ transform: isActive ? "scale(1.04)" : "scale(1)" }}
-                  />
-                  {/* Subtle gradient overlay so text is readable */}
+                {/* Node */}
+                <div className="relative flex-shrink-0 mt-0.5">
+                  {/* Animated fill segment on the track above this node */}
+                  {isActive && (
+                    <div
+                      className="absolute bottom-full left-1/2 -translate-x-1/2 w-px bg-black/40 origin-bottom"
+                      style={{
+                        height: "48px",
+                        transform: `scaleY(${progress}) translateX(-50%)`,
+                        transformOrigin: "bottom",
+                        transition: "none",
+                      }}
+                    />
+                  )}
+                  {isDone && (
+                    <div
+                      className="absolute bottom-full left-1/2 -translate-x-1/2 w-px bg-black/30"
+                      style={{ height: "48px" }}
+                    />
+                  )}
+                  {/* Circle node */}
                   <div
-                    className="absolute inset-0"
+                    className="w-[30px] h-[30px] rounded-full border-2 flex items-center justify-center transition-all duration-400"
                     style={{
-                      background: `linear-gradient(to bottom, transparent 50%, ${STEP_BGS[i]} 100%)`,
+                      borderColor: isActive
+                        ? "rgba(0,0,0,0.55)"
+                        : isDone
+                        ? "rgba(0,0,0,0.20)"
+                        : "rgba(0,0,0,0.10)",
+                      background: isActive
+                        ? "rgba(0,0,0,0.06)"
+                        : "transparent",
                     }}
-                  />
-                  {/* Step badge */}
-                  <div
-                    className="absolute top-3 left-3 w-8 h-8 rounded-full border bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm"
-                    style={{ borderColor: STEP_BORDERS[i] }}
                   >
-                    <span className="font-pixel text-[9px] text-black/40 tracking-widest">
-                      {step.n}
-                    </span>
+                    {isDone ? (
+                      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                        <path
+                          d="M1 4L3.5 6.5L9 1"
+                          stroke="rgba(0,0,0,0.35)"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    ) : (
+                      <span
+                        className="font-pixel text-[8px] tracking-widest"
+                        style={{
+                          color: isActive
+                            ? "rgba(0,0,0,0.6)"
+                            : "rgba(0,0,0,0.25)",
+                        }}
+                      >
+                        {step.n}
+                      </span>
+                    )}
                   </div>
                 </div>
 
-                {/* Text bottom half */}
-                <div className="flex flex-col flex-1 p-5 pt-4">
-                  <h3 className="text-[15px] font-light leading-snug mb-2 text-black/80">
-                    {step.title}
-                  </h3>
-                  <p
-                    className="text-[12px] leading-relaxed transition-all duration-500"
+                {/* Text */}
+                <div className="flex-1 min-w-0 pt-1">
+                  <div
+                    className="flex items-center gap-2 mb-1 transition-all duration-300"
                     style={{
-                      color: isActive ? "rgba(0,0,0,0.55)" : "rgba(0,0,0,0.35)",
+                      color: isActive
+                        ? "rgba(0,0,0,0.85)"
+                        : "rgba(0,0,0,0.35)",
                     }}
                   >
-                    {step.desc}
-                  </p>
+                    <h3 className="text-[15px] font-medium leading-snug">
+                      {step.title}
+                    </h3>
+                  </div>
 
-                  {/* Bottom progress bar */}
-                  <div className="flex gap-1 mt-auto pt-4">
-                    {steps.map((_, j) => (
+                  {/* Description — only shown when active */}
+                  <div
+                    className="overflow-hidden transition-all duration-500"
+                    style={{
+                      maxHeight: isActive ? "100px" : "0px",
+                      opacity: isActive ? 1 : 0,
+                    }}
+                  >
+                    <p className="text-[13px] text-black/45 leading-relaxed pt-0.5">
+                      {step.desc}
+                    </p>
+                    {/* Timer bar */}
+                    <div className="mt-3 h-[2px] rounded-full bg-black/06 overflow-hidden w-full">
                       <div
-                        key={j}
-                        className="h-[2px] flex-1 rounded-full transition-all duration-500"
+                        className="h-full rounded-full bg-black/30 origin-left"
                         style={{
-                          background:
-                            j <= i
-                              ? `rgba(0,0,0,${0.10 + j * 0.055})`
-                              : "rgba(0,0,0,0.05)",
+                          width: `${progress * 100}%`,
+                          transition: paused ? "none" : "none",
                         }}
                       />
-                    ))}
+                    </div>
                   </div>
                 </div>
-
-                {/* Active glow ring */}
-                {isActive && (
-                  <div
-                    className="absolute inset-0 rounded-2xl pointer-events-none"
-                    style={{
-                      boxShadow: `inset 0 0 0 1.5px rgba(70,160,155,0.35)`,
-                    }}
-                  />
-                )}
-              </div>
+              </button>
             );
           })}
         </div>
 
-        {/* Step dots indicator below */}
-        <div className="flex justify-center gap-2 mt-8">
-          {steps.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setActive(i)}
-              className="rounded-full transition-all duration-400"
+        {/* Right: image panel */}
+        <div className="flex-1 relative rounded-2xl overflow-hidden bg-black/[0.03] border border-black/[0.06] min-h-[440px]">
+          {steps.map((step, i) => (
+            <div
+              key={step.n}
+              className="absolute inset-0 transition-all duration-700"
               style={{
-                width: active === i ? "24px" : "6px",
-                height: "6px",
-                background:
-                  active === i ? "rgba(0,0,0,0.45)" : "rgba(0,0,0,0.12)",
+                opacity: active === i ? 1 : 0,
+                transform: active === i ? "scale(1)" : "scale(1.02)",
+                pointerEvents: active === i ? "auto" : "none",
               }}
-              aria-label={`Paso ${i + 1}`}
-            />
+            >
+              <img
+                src={STEP_IMAGES[i]}
+                alt={step.title}
+                className="w-full h-full object-cover"
+              />
+              {/* Bottom text overlay */}
+              <div
+                className="absolute bottom-0 left-0 right-0 p-8"
+                style={{
+                  background:
+                    "linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 100%)",
+                }}
+              >
+                <p className="text-white/90 text-[13px] font-light tracking-wide">
+                  {step.title}
+                </p>
+              </div>
+            </div>
           ))}
         </div>
       </div>
 
-      {/* ── Mobile ──────────────────────────────────────────────── */}
+      {/* ── Mobile: vertical stack with dotted line ──────────── */}
       <div className="flex md:hidden flex-col relative pl-10">
-        {/* Vertical dotted line */}
-        <div className="absolute left-[18px] top-0 bottom-0 w-px overflow-hidden">
-          <svg width="2" height="100%" style={{ display: "block" }}>
-            <line
-              x1="1" y1="0" x2="1" y2="100%"
-              stroke="rgba(0,0,0,0.13)"
-              strokeWidth="1.5"
-              strokeDasharray="5 5"
-              className="workflow-dash-v"
-            />
-          </svg>
-        </div>
+        <div className="absolute left-[15px] top-0 bottom-0 w-px bg-black/[0.07]" />
 
         {steps.map((step, i) => (
-          <div key={step.n} className="relative mb-4 last:mb-0">
-            {/* Node dot */}
-            <div
-              className="absolute -left-10 top-5 w-8 h-8 rounded-full border bg-white flex items-center justify-center shadow-sm z-10"
-              style={{ borderColor: STEP_BORDERS[i] }}
-            >
-              <span className="font-pixel text-[9px] text-black/35 tracking-widest">
+          <div key={step.n} className="relative mb-5 last:mb-0">
+            {/* Node */}
+            <div className="absolute -left-[34px] top-4 w-[30px] h-[30px] rounded-full border-2 border-black/15 bg-white flex items-center justify-center z-10">
+              <span className="font-pixel text-[8px] text-black/35 tracking-widest">
                 {step.n}
               </span>
             </div>
 
-            <div
-              className="rounded-2xl overflow-hidden"
-              style={{
-                background: STEP_BGS[i],
-                border: `1px solid ${STEP_BORDERS[i]}`,
-                opacity: 0,
-                animation: `fade-up 0.6s ease ${i * 100}ms forwards`,
-              }}
-            >
-              {/* Image */}
-              <div className="h-36 overflow-hidden">
+            <div className="rounded-2xl overflow-hidden border border-black/[0.07] bg-white">
+              <div className="h-40 overflow-hidden">
                 <img
                   src={STEP_IMAGES[i]}
                   alt={step.title}
@@ -298,7 +305,7 @@ function WorkflowSteps({
                 />
               </div>
               <div className="p-5">
-                <h3 className="text-[16px] font-light mb-1.5 leading-snug text-black/80">
+                <h3 className="text-[15px] font-medium mb-1.5 leading-snug text-black/80">
                   {step.title}
                 </h3>
                 <p className="text-[12px] text-black/40 leading-relaxed">
@@ -1439,7 +1446,7 @@ export default function StttockPage() {
         </div>
       </section>
 
-      {/* ── PRICING ───────────────────────────────────────────────────────── */}
+      {/* ── PRICING ───────────────────────────────────────────────���───────── */}
       <section
         id="precios"
         className="py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]"

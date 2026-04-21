@@ -377,6 +377,21 @@ function Icon({ type }: { type: string }) {
         <line x1="12" y1="22" x2="12" y2="12" />
       </svg>
     ),
+    clipboard: (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      >
+        <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+        <line x1="9" y1="12" x2="15" y2="12" />
+        <line x1="9" y1="16" x2="13" y2="16" />
+      </svg>
+    ),
     pos: (
       <svg
         width="18"
@@ -625,6 +640,11 @@ const copy = {
         icon: "package",
         title: "Inventario que nunca cuadra",
         desc: "Conteos manuales que no coinciden con las ventas reales.",
+      },
+      {
+        icon: "clipboard",
+        title: "Cotejar a mano",
+        desc: "Cuadrar cuentas entre excel, notas a mano y sistemas de ventas.",
       },
     ],
     stepsTag: "FLUJO",
@@ -887,6 +907,11 @@ const copy = {
         icon: "package",
         title: "Inventory that never adds up",
         desc: "Manual counts that never match actual sales.",
+      },
+      {
+        icon: "clipboard",
+        title: "Manual reconciliation",
+        desc: "Balancing accounts across Excel, handwritten notes, and sales systems.",
       },
     ],
     stepsTag: "FLOW",

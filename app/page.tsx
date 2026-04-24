@@ -847,7 +847,7 @@ const copy = {
       },
       {
         q: "¿Qué tan rápido se implementa?",
-        a: "La mayoría de nuestros clientes están operando en menos de 48 horas. Incluye migración de datos y capacitación del equipo.",
+        a: "Con nuestra IA, la implementación toma minutos — lo que antes tomaba días o semanas. Solo importas el menú que ya tienes operando, confirmas y ajustas, y listo. Reducimos el tiempo de este proceso en un 95%, haciendo que la transición desde sistemas legacy sea rápida y sin fricciones.",
       },
       {
         q: "¿Cómo migro de mi sistema actual?",

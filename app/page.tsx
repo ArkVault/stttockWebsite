@@ -9,6 +9,150 @@ import { TypewriterText } from "@/components/typewriter-text";
 import { PricingCard } from "@/components/pricing-card";
 import { useLang } from "@/lib/language-context";
 
+// ─── Feature organic 3-D shapes ──────────────────────────────────────────────
+function FeatureShape({ icon }: { icon: string }) {
+  const map: Record<string, React.ReactElement> = {
+
+    // pos — coral wavy tube
+    pos: (
+      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
+        <defs>
+          <radialGradient id="g-pos" cx="170" cy="85" r="180" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#FFCAC3" /><stop offset="50%" stopColor="#FF6B57" /><stop offset="100%" stopColor="#B83020" />
+          </radialGradient>
+          <filter id="f-pos"><feDropShadow dx="0" dy="10" stdDeviation="14" floodColor="#B83020" floodOpacity="0.22" /></filter>
+        </defs>
+        <rect width="400" height="240" fill="#FFF3F1" />
+        <path filter="url(#f-pos)" fill="url(#g-pos)"
+          d="M 65,108 C 78,56 116,44 142,88 C 162,124 184,148 212,108 C 236,70 272,52 300,90 C 314,110 314,136 300,156 C 278,186 242,184 220,152 C 200,122 182,106 158,140 C 136,172 102,180 76,156 C 58,140 54,125 65,108 Z" />
+      </svg>
+    ),
+
+    // brain — violet bumpy blob
+    brain: (
+      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
+        <defs>
+          <radialGradient id="g-brain" cx="160" cy="80" r="200" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#DDD0FF" /><stop offset="48%" stopColor="#8B5CF6" /><stop offset="100%" stopColor="#4C1D95" />
+          </radialGradient>
+          <filter id="f-brain"><feDropShadow dx="0" dy="10" stdDeviation="14" floodColor="#4C1D95" floodOpacity="0.22" /></filter>
+        </defs>
+        <rect width="400" height="240" fill="#F5F0FF" />
+        <path filter="url(#f-brain)" fill="url(#g-brain)"
+          d="M 200,44 C 238,40 272,58 292,88 C 310,56 332,72 328,104 C 348,118 348,148 328,162 C 330,192 308,210 280,208 C 260,228 228,228 208,210 C 192,224 168,222 154,208 C 124,212 102,192 106,164 C 84,148 84,116 106,100 C 104,68 130,50 160,56 C 172,48 186,44 200,44 Z" />
+      </svg>
+    ),
+
+    // bell — blue parallel inflated tubes
+    bell: (
+      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
+        <defs>
+          <radialGradient id="g-bell" cx="150" cy="70" r="220" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#BFDBFE" /><stop offset="48%" stopColor="#3B82F6" /><stop offset="100%" stopColor="#1E3A8A" />
+          </radialGradient>
+          <filter id="f-bell"><feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#1E3A8A" floodOpacity="0.22" /></filter>
+        </defs>
+        <rect width="400" height="240" fill="#EFF6FF" />
+        <g filter="url(#f-bell)" fill="url(#g-bell)">
+          <rect x="68" y="52" width="264" height="40" rx="20" />
+          <rect x="80" y="104" width="240" height="40" rx="20" />
+          <rect x="68" y="156" width="258" height="40" rx="20" />
+        </g>
+      </svg>
+    ),
+
+    // calendar — green 6-point asterisk
+    calendar: (
+      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
+        <defs>
+          <radialGradient id="g-cal" cx="185" cy="75" r="200" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#86EFAC" /><stop offset="48%" stopColor="#16A34A" /><stop offset="100%" stopColor="#14532D" />
+          </radialGradient>
+          <filter id="f-cal"><feDropShadow dx="0" dy="10" stdDeviation="14" floodColor="#14532D" floodOpacity="0.22" /></filter>
+        </defs>
+        <rect width="400" height="240" fill="#F0FFF4" />
+        <g filter="url(#f-cal)" fill="url(#g-cal)">
+          <rect x="116" y="100" width="168" height="40" rx="20" />
+          <rect x="116" y="100" width="168" height="40" rx="20" transform="rotate(60 200 120)" />
+          <rect x="116" y="100" width="168" height="40" rx="20" transform="rotate(120 200 120)" />
+        </g>
+      </svg>
+    ),
+
+    // chart — orange coral cluster
+    chart: (
+      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
+        <defs>
+          <radialGradient id="g-chart" cx="170" cy="80" r="200" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#FED7AA" /><stop offset="48%" stopColor="#F97316" /><stop offset="100%" stopColor="#9A3412" />
+          </radialGradient>
+          <filter id="f-chart"><feDropShadow dx="0" dy="10" stdDeviation="14" floodColor="#9A3412" floodOpacity="0.22" /></filter>
+        </defs>
+        <rect width="400" height="240" fill="#FFF7ED" />
+        <g filter="url(#f-chart)" fill="url(#g-chart)">
+          <circle cx="200" cy="120" r="52" />
+          <circle cx="152" cy="84" r="36" />
+          <circle cx="250" cy="82" r="34" />
+          <circle cx="252" cy="158" r="36" />
+          <circle cx="150" cy="158" r="34" />
+          <circle cx="200" cy="56" r="28" />
+          <circle cx="200" cy="184" r="28" />
+        </g>
+      </svg>
+    ),
+
+    // building — teal smooth pillow
+    building: (
+      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
+        <defs>
+          <radialGradient id="g-bld" cx="155" cy="80" r="200" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#99F6E4" /><stop offset="48%" stopColor="#0D9488" /><stop offset="100%" stopColor="#134E4A" />
+          </radialGradient>
+          <filter id="f-bld"><feDropShadow dx="0" dy="10" stdDeviation="14" floodColor="#134E4A" floodOpacity="0.22" /></filter>
+        </defs>
+        <rect width="400" height="240" fill="#F0FDFA" />
+        <path filter="url(#f-bld)" fill="url(#g-bld)"
+          d="M 200,62 C 262,62 322,82 322,120 C 322,158 262,178 200,178 C 138,178 78,158 78,120 C 78,82 138,62 200,62 Z" />
+      </svg>
+    ),
+
+    // percent — rose donut ring
+    percent: (
+      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
+        <defs>
+          <radialGradient id="g-pct" cx="165" cy="75" r="200" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#FBCFE8" /><stop offset="48%" stopColor="#EC4899" /><stop offset="100%" stopColor="#831843" />
+          </radialGradient>
+          <filter id="f-pct"><feDropShadow dx="0" dy="10" stdDeviation="14" floodColor="#831843" floodOpacity="0.22" /></filter>
+          <mask id="m-pct">
+            <rect width="400" height="240" fill="white" />
+            <circle cx="200" cy="120" r="38" fill="black" />
+          </mask>
+        </defs>
+        <rect width="400" height="240" fill="#FDF2F8" />
+        <circle cx="200" cy="120" r="82" fill="url(#g-pct)" filter="url(#f-pct)" mask="url(#m-pct)" />
+      </svg>
+    ),
+
+    // webhook — indigo figure-8
+    webhook: (
+      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
+        <defs>
+          <radialGradient id="g-hook" cx="160" cy="80" r="200" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="#C7D2FE" /><stop offset="48%" stopColor="#6366F1" /><stop offset="100%" stopColor="#312E81" />
+          </radialGradient>
+          <filter id="f-hook"><feDropShadow dx="0" dy="10" stdDeviation="14" floodColor="#312E81" floodOpacity="0.22" /></filter>
+        </defs>
+        <rect width="400" height="240" fill="#EEF2FF" />
+        <path filter="url(#f-hook)" fill="url(#g-hook)"
+          d="M 130,120 C 130,80 155,52 195,68 C 228,82 228,158 262,172 C 302,186 330,160 330,120 C 330,80 305,52 265,68 C 232,82 232,158 198,172 C 158,186 130,160 130,120 Z" />
+      </svg>
+    ),
+  };
+
+  return <div style={{ width: "100%", height: "100%" }}>{map[icon] ?? map["pos"]}</div>;
+}
+
 // ─── Intersection Observer hook ──────────────────────────────────────────────
 function useInView(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
@@ -1443,16 +1587,9 @@ export default function StttockPage() {
                 className="flex flex-col"
                 delay={i * 50}
               >
-                {/* 3D abstract image — inset with rounded corners */}
-                <div className="mx-3 mt-3 rounded-2xl overflow-hidden flex-shrink-0 relative" style={{ height: "190px" }}>
-                  <img
-                    src={`/images/feature-${f.icon}.jpg`}
-                    alt={f.title}
-                    className="w-full h-full object-cover"
-                    style={{ filter: "blur(5px)" }}
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-white/35 pointer-events-none" />
+                {/* 3D organic shape */}
+                <div className="mx-3 mt-3 rounded-2xl overflow-hidden flex-shrink-0" style={{ height: "190px" }}>
+                  <FeatureShape icon={f.icon} />
                 </div>
                 {/* Text */}
                 <div className="px-5 py-4 flex flex-col flex-1">

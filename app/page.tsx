@@ -232,6 +232,7 @@ const STEP_IMAGES = [
   "/images/step-02.jpg",
   "/images/step-03.jpg",
   "/images/step-04.jpg",
+  "/images/step-05.jpg",
 ];
 
 const STEP_DURATION = 3000; // ms per step

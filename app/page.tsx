@@ -995,15 +995,15 @@ const copy = {
       },
       {
         q: "¿Cómo migro de mi sistema actual?",
-        a: "Nuestro equipo de onboarding te ayuda a importar tu menú, inventario y configuraciones. El proceso es guiado y sin costo adicional.",
+        a: "Tan sencillo como importar el Excel con el que controlabas tu stock. Nuestro sistema se encarga de mapearlo y hacer el trabajo más pesado por ti.",
       },
       {
         q: "¿Facturan CFDI?",
         a: "Sí, emitimos facturas CFDI 4.0 con todos los requisitos fiscales mexicanos. Puedes solicitarlas desde tu panel.",
       },
       {
-        q: "¿Hay app móvil?",
-        a: "Sí, tenemos apps nativas para iOS y Android. Los meseros pueden tomar pedidos desde su celular o tablet.",
+        q: "¿Necesito conocimientos técnicos para usarlo?",
+        a: "No. La plataforma está diseñada para operadores de bares y restaurantes, no para técnicos. Desde el POS hasta las proyecciones, todo es visual e intuitivo. Si tienes dudas, nuestro equipo te acompaña.",
       },
       {
         q: "¿El soporte es en español?",
@@ -1262,15 +1262,15 @@ const copy = {
       },
       {
         q: "How do I migrate from my current system?",
-        a: "Our onboarding team helps you import your menu, inventory, and settings. The process is guided and at no extra cost.",
+        a: "As simple as importing the Excel spreadsheet you used to track your stock. Our system maps it and does the heavy lifting for you.",
       },
       {
         q: "Do you issue invoices?",
         a: "Yes, we issue CFDI 4.0 invoices with all Mexican tax requirements. You can request them from your dashboard.",
       },
       {
-        q: "Is there a mobile app?",
-        a: "Yes, we have native apps for iOS and Android. Waiters can take orders from their phone or tablet.",
+        q: "Do I need technical knowledge to use it?",
+        a: "No. The platform is built for bar and restaurant operators, not tech experts. From the POS to projections, everything is visual and intuitive. If you have questions, our team is here to help.",
       },
       {
         q: "Is support available in English?",

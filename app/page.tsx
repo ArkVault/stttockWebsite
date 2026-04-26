@@ -834,7 +834,7 @@ const copy = {
       {
         icon: "brain",
         title: "Menú con parser IA",
-        desc: "Extrae insumos automáticamente de tu carta.",
+        desc: "Extrae insumos automáticamente a partir de tus tablas de Excel anteriores.",
       },
       {
         icon: "bell",
@@ -1101,7 +1101,7 @@ const copy = {
       {
         icon: "brain",
         title: "AI menu parser",
-        desc: "Automatically extracts ingredients from your menu.",
+        desc: "Automatically extracts ingredients from your existing Excel spreadsheets.",
       },
       {
         icon: "bell",

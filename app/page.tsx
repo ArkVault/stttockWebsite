@@ -11,148 +11,97 @@ import { useLang } from "@/lib/language-context";
 
 // ─── Feature organic 3-D shapes ──────────────────────────────────────────────
 function FeatureShape({ icon }: { icon: string }) {
-  // Shared glass panel + icon renderer
-  function GlassCard({
-    c1, c2, c3, b1x, b1y, b2x, b2y, children,
-  }: {
-    c1: string; c2: string; c3: string;
-    b1x: number; b1y: number; b2x: number; b2y: number;
-    children: React.ReactNode;
-  }) {
-    return (
-      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
-        <defs>
-          <linearGradient id={`bg-${icon}`} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor={c1} />
-            <stop offset="100%" stopColor={c3} />
-          </linearGradient>
-          <filter id={`bl-${icon}`} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="32" />
-          </filter>
-        </defs>
-        {/* gradient background */}
-        <rect width="400" height="240" fill={`url(#bg-${icon})`} />
-        {/* blurred color blobs */}
-        <circle cx={b1x} cy={b1y} r="110" fill={c2} filter={`url(#bl-${icon})`} opacity="0.55" />
-        <circle cx={b2x} cy={b2y} r="90"  fill={c1} filter={`url(#bl-${icon})`} opacity="0.45" />
-        {/* glass panel */}
-        <rect x="128" y="55" width="144" height="130" rx="22"
-          fill="rgba(255,255,255,0.13)" stroke="rgba(255,255,255,0.38)" strokeWidth="1.5" />
-        {/* top-edge highlight */}
-        <line x1="148" y1="56" x2="254" y2="56"
-          stroke="rgba(255,255,255,0.55)" strokeWidth="1" strokeLinecap="round" />
-        {/* icon centered at 200,120 — white strokes */}
-        <g transform="translate(200,120)" stroke="white" strokeWidth="2.2"
-          fill="none" strokeLinecap="round" strokeLinejoin="round">
-          {children}
-        </g>
-      </svg>
-    );
-  }
+  // Glass tile — dark bg + glossy rounded-square with diagonal specular highlight
+  // Each icon gets a unique accent color; shape and glow adapt to it.
+  const palettes: Record<string, { mid: string; deep: string; glow: string }> = {
+    pos:      { mid: "#5B8DEF", deep: "#1A2DB0", glow: "#3355CC" },
+    brain:    { mid: "#9B6DFF", deep: "#3A0CA3", glow: "#6644CC" },
+    bell:     { mid: "#F472B6", deep: "#9D174D", glow: "#CC2266" },
+    calendar: { mid: "#34D399", deep: "#065F46", glow: "#059669" },
+    chart:    { mid: "#FB923C", deep: "#9A3412", glow: "#EA580C" },
+    building: { mid: "#818CF8", deep: "#1E1B4B", glow: "#4338CA" },
+    percent:  { mid: "#E879F9", deep: "#701A75", glow: "#C026D3" },
+    webhook:  { mid: "#2DD4BF", deep: "#134E4A", glow: "#0D9488" },
+  };
+  const p = palettes[icon] ?? palettes["pos"];
+  const uid = `gl-${icon}`;
 
-  switch (icon) {
+  return (
+    <svg
+      viewBox="0 0 400 240"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ width: "100%", height: "100%", display: "block" }}
+    >
+      <defs>
+        {/* Main glass gradient: light silver-white top-right → accent → deep bottom-left */}
+        <linearGradient id={`${uid}-body`} x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor="#C8D4F0" />
+          <stop offset="38%"  stopColor={p.mid}   />
+          <stop offset="100%" stopColor={p.deep}  />
+        </linearGradient>
+        {/* Specular diagonal highlight */}
+        <linearGradient id={`${uid}-spec`} x1="0%" y1="0%" x2="60%" y2="100%">
+          <stop offset="0%"   stopColor="white" stopOpacity="0.82" />
+          <stop offset="55%"  stopColor="white" stopOpacity="0.08" />
+          <stop offset="100%" stopColor="white" stopOpacity="0"    />
+        </linearGradient>
+        {/* Outer glow blur */}
+        <filter id={`${uid}-glow`} x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="18" />
+        </filter>
+        {/* Clip to tile shape */}
+        <clipPath id={`${uid}-clip`}>
+          <rect x="88" y="14" width="224" height="212" rx="44" />
+        </clipPath>
+        {/* Inner bottom glow */}
+        <radialGradient id={`${uid}-inner`} cx="50%" cy="90%" r="60%">
+          <stop offset="0%"   stopColor={p.glow} stopOpacity="0.55" />
+          <stop offset="100%" stopColor={p.glow} stopOpacity="0"    />
+        </radialGradient>
+      </defs>
 
-    // ── POS — tablet/terminal ────────────────────────────────────────────
-    case "pos": return (
-      <GlassCard c1="#7C3AED" c2="#6D28D9" c3="#2563EB" b1x={90} b1y={55} b2x={310} b2y={185}>
-        <rect x="-22" y="-26" width="44" height="54" rx="5" />
-        <rect x="-15" y="-19" width="30" height="18" rx="2" fill="rgba(255,255,255,0.18)" />
-        <circle cx="0" cy="18" r="4" fill="rgba(255,255,255,0.3)" stroke="white" strokeWidth="1.5" />
-        <line x1="-10" y1="3" x2="-4" y2="3" strokeWidth="1.5" />
-        <line x1="0" y1="3" x2="6" y2="3" strokeWidth="1.5" />
-      </GlassCard>
-    );
+      {/* Dark background */}
+      <rect width="400" height="240" fill="#08090F" />
 
-    // ── BRAIN — AI/neural ────────────────────────────────────────────────
-    case "brain": return (
-      <GlassCard c1="#0EA5E9" c2="#6366F1" c3="#06B6D4" b1x={100} b1y={60} b2x={300} b2y={180}>
-        <path d="M 0,-22 C -14,-22 -24,-12 -24,2 C -24,14 -16,22 -6,24 L 6,24 C 16,22 24,14 24,2 C 24,-12 14,-22 0,-22 Z" />
-        <line x1="0" y1="-22" x2="0" y2="24" strokeWidth="1.5" />
-        <path d="M -24,-2 C -30,-2 -30,-14 -24,-14" strokeWidth="1.8" />
-        <path d="M  24,-2 C  30,-2  30,-14  24,-14" strokeWidth="1.8" />
-        <line x1="-14" y1="6"  x2="-6"  y2="6"  strokeWidth="1.5" />
-        <line x1=" 6"  y1="6"  x2=" 14" y2="6"  strokeWidth="1.5" />
-        <line x1="-14" y1="-8" x2="-6"  y2="-8" strokeWidth="1.5" />
-        <line x1=" 6"  y1="-8" x2=" 14" y2="-8" strokeWidth="1.5" />
-      </GlassCard>
-    );
+      {/* Soft outer glow behind tile */}
+      <rect x="88" y="14" width="224" height="212" rx="44"
+        fill={p.glow} filter={`url(#${uid}-glow)`} opacity="0.45" />
 
-    // ── BELL — alerts / stock ────────────────────────────────────────────
-    case "bell": return (
-      <GlassCard c1="#EC4899" c2="#F43F5E" c3="#EF4444" b1x={80} b1y={50} b2x={320} b2y={190}>
-        <path d="M 0,-24 C 0,-24 -2,-24 -2,-20 C -14,-18 -22,-8 -22,6 L -22,16 L 22,16 L 22,6 C 22,-8 14,-18 2,-20 C 2,-24 0,-24 0,-24 Z" />
-        <path d="M -7,16 A 7,7 0 0 0 7,16" />
-        <circle cx="14" cy="-18" r="6" fill="rgba(255,100,100,0.7)" stroke="white" strokeWidth="1.8" />
-      </GlassCard>
-    );
+      {/* Glass tile body */}
+      <rect x="88" y="14" width="224" height="212" rx="44"
+        fill={`url(#${uid}-body)`} />
 
-    // ── CALENDAR — reservations ──────────────────────────────────────────
-    case "calendar": return (
-      <GlassCard c1="#10B981" c2="#059669" c3="#0891B2" b1x={95} b1y={65} b2x={305} b2y={175}>
-        <rect x="-22" y="-20" width="44" height="42" rx="5" />
-        <line x1="-22" y1="-6" x2="22" y2="-6" strokeWidth="1.5" />
-        <line x1="-10" y1="-24" x2="-10" y2="-14" />
-        <line x1=" 10" y1="-24" x2=" 10" y2="-14" />
-        <circle cx="-12" cy="4"  r="2" fill="rgba(255,255,255,0.6)" stroke="none" />
-        <circle cx="0"   cy="4"  r="2" fill="rgba(255,255,255,0.6)" stroke="none" />
-        <circle cx="12"  cy="4"  r="2" fill="rgba(255,255,255,0.6)" stroke="none" />
-        <circle cx="-12" cy="14" r="2" fill="rgba(255,255,255,0.6)" stroke="none" />
-        <circle cx="0"   cy="14" r="2" fill="rgba(255,255,255,0.6)" stroke="none" />
-        <circle cx="12"  cy="14" r="2" fill="rgba(255,255,255,0.6)" stroke="none" />
-      </GlassCard>
-    );
+      {/* Inner bottom color glow */}
+      <rect x="88" y="14" width="224" height="212" rx="44"
+        fill={`url(#${uid}-inner)`} clipPath={`url(#${uid}-clip)`} />
 
-    // ── CHART — projections / ROI ────────────────────────────────────────
-    case "chart": return (
-      <GlassCard c1="#F97316" c2="#EAB308" c3="#DC2626" b1x={100} b1y={55} b2x={300} b2y={185}>
-        <line x1="-22" y1="22" x2="22" y2="22" />
-        <line x1="-22" y1="-22" x2="-22" y2="22" />
-        <rect x="-18" y="2"  width="10" height="20" rx="2" fill="rgba(255,255,255,0.25)" />
-        <rect x="-5"  y="-10" width="10" height="32" rx="2" fill="rgba(255,255,255,0.35)" />
-        <rect x="8"   y="-18" width="10" height="40" rx="2" fill="rgba(255,255,255,0.45)" />
-      </GlassCard>
-    );
+      {/* Diagonal specular highlight */}
+      <ellipse cx="210" cy="90" rx="130" ry="72"
+        fill={`url(#${uid}-spec)`}
+        transform="rotate(-28 210 90)"
+        clipPath={`url(#${uid}-clip)`} />
 
-    // ── BUILDING — multi-location ────────────────────────────────────────
-    case "building": return (
-      <GlassCard c1="#6366F1" c2="#4F46E5" c3="#7C3AED" b1x={85} b1y={60} b2x={315} b2y={180}>
-        <rect x="-22" y="-22" width="44" height="44" rx="3" />
-        <rect x="-14" y="-14" width="8" height="8" rx="1" fill="rgba(255,255,255,0.25)" />
-        <rect x="6"   y="-14" width="8" height="8" rx="1" fill="rgba(255,255,255,0.25)" />
-        <rect x="-14" y="2"   width="8" height="8" rx="1" fill="rgba(255,255,255,0.25)" />
-        <rect x="6"   y="2"   width="8" height="8" rx="1" fill="rgba(255,255,255,0.25)" />
-        <rect x="-6"  y="10"  width="12" height="12" rx="1" />
-        <line x1="-22" y1="22" x2="22" y2="22" />
-      </GlassCard>
-    );
+      {/* Top-left secondary gleam */}
+      <ellipse cx="118" cy="42" rx="38" ry="22"
+        fill="white" opacity="0.22"
+        clipPath={`url(#${uid}-clip)`} />
 
-    // ── PERCENT — pricing / holistic ─────────────────────────────────────
-    case "percent": return (
-      <GlassCard c1="#A855F7" c2="#EC4899" c3="#6366F1" b1x={90} b1y={55} b2x={310} b2y={185}>
-        <circle cx="-10" cy="-12" r="8" />
-        <circle cx=" 10" cy=" 12" r="8" />
-        <line x1="16" y1="-20" x2="-16" y2="20" strokeWidth="2.5" />
-      </GlassCard>
-    );
+      {/* Tile border */}
+      <rect x="88" y="14" width="224" height="212" rx="44"
+        fill="none"
+        stroke="rgba(255,255,255,0.28)"
+        strokeWidth="1.5" />
 
-    // ── WEBHOOK — integrations ───────────────────────────────────────────
-    case "webhook": return (
-      <GlassCard c1="#14B8A6" c2="#0EA5E9" c3="#22C55E" b1x={95} b1y={60} b2x={305} b2y={180}>
-        <circle cx="-16" cy="-8" r="8" />
-        <circle cx=" 16" cy=" 8" r="8" />
-        <path d="M -8,-8 C 0,-8 0,8 8,8" strokeWidth="2" />
-        <circle cx="-16" cy="-8" r="3" fill="rgba(255,255,255,0.5)" stroke="none" />
-        <circle cx=" 16" cy=" 8" r="3" fill="rgba(255,255,255,0.5)" stroke="none" />
-      </GlassCard>
-    );
-
-    default: return (
-      <GlassCard c1="#7C3AED" c2="#6D28D9" c3="#2563EB" b1x={90} b1y={55} b2x={310} b2y={185}>
-        <circle cx="0" cy="0" r="20" />
-      </GlassCard>
-    );
-  }
+      {/* Bottom rim light */}
+      <rect x="88" y="14" width="224" height="212" rx="44"
+        fill="none"
+        stroke={p.glow}
+        strokeWidth="1"
+        opacity="0.4" />
+    </svg>
+  );
 }
+
 
 // ─── Intersection Observer hook ──────────────────────────────────────────────
 function useInView(threshold = 0.15) {

@@ -11,93 +11,53 @@ import { useLang } from "@/lib/language-context";
 
 // ─── Feature organic 3-D shapes ──────────────────────────────────────────────
 function FeatureShape({ icon }: { icon: string }) {
-  // Glass tile — dark bg + glossy rounded-square with diagonal specular highlight
-  // Each icon gets a unique accent color; shape and glow adapt to it.
-  const palettes: Record<string, { mid: string; deep: string; glow: string }> = {
-    pos:      { mid: "#5B8DEF", deep: "#1A2DB0", glow: "#3355CC" },
-    brain:    { mid: "#9B6DFF", deep: "#3A0CA3", glow: "#6644CC" },
-    bell:     { mid: "#F472B6", deep: "#9D174D", glow: "#CC2266" },
-    calendar: { mid: "#34D399", deep: "#065F46", glow: "#059669" },
-    chart:    { mid: "#FB923C", deep: "#9A3412", glow: "#EA580C" },
-    building: { mid: "#818CF8", deep: "#1E1B4B", glow: "#4338CA" },
-    percent:  { mid: "#E879F9", deep: "#701A75", glow: "#C026D3" },
-    webhook:  { mid: "#2DD4BF", deep: "#134E4A", glow: "#0D9488" },
-  };
-  const p = palettes[icon] ?? palettes["pos"];
-  const uid = `gl-${icon}`;
+  // Icons with custom PNGs
+  const pngIcons = new Set(["brain","bell","calendar","webhook","percent","building","chart"]);
 
+  if (pngIcons.has(icon)) {
+    return (
+      <img
+        src={}
+        alt={icon}
+        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+      />
+    );
+  }
+
+  // POS — glass SVG fallback
+  const uid = "gl-pos";
+  const p = { mid: "#5B8DEF", deep: "#1A2DB0", glow: "#3355CC" };
   return (
-    <svg
-      viewBox="0 0 400 240"
-      xmlns="http://www.w3.org/2000/svg"
-      style={{ width: "100%", height: "100%", display: "block" }}
-    >
+    <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
       <defs>
-        {/* Main glass gradient: light silver-white top-right → accent → deep bottom-left */}
-        <linearGradient id={`${uid}-body`} x1="100%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id={} x1="100%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%"   stopColor="#C8D4F0" />
           <stop offset="38%"  stopColor={p.mid}   />
           <stop offset="100%" stopColor={p.deep}  />
         </linearGradient>
-        {/* Specular diagonal highlight */}
-        <linearGradient id={`${uid}-spec`} x1="0%" y1="0%" x2="60%" y2="100%">
+        <linearGradient id={} x1="0%" y1="0%" x2="60%" y2="100%">
           <stop offset="0%"   stopColor="white" stopOpacity="0.82" />
           <stop offset="55%"  stopColor="white" stopOpacity="0.08" />
           <stop offset="100%" stopColor="white" stopOpacity="0"    />
         </linearGradient>
-        {/* Outer glow blur */}
-        <filter id={`${uid}-glow`} x="-30%" y="-30%" width="160%" height="160%">
+        <filter id={} x="-30%" y="-30%" width="160%" height="160%">
           <feGaussianBlur stdDeviation="18" />
         </filter>
-        {/* Clip to tile shape */}
-        <clipPath id={`${uid}-clip`}>
+        <clipPath id={}>
           <rect x="88" y="14" width="224" height="212" rx="44" />
         </clipPath>
-        {/* Inner bottom glow */}
-        <radialGradient id={`${uid}-inner`} cx="50%" cy="90%" r="60%">
+        <radialGradient id={} cx="50%" cy="90%" r="60%">
           <stop offset="0%"   stopColor={p.glow} stopOpacity="0.55" />
           <stop offset="100%" stopColor={p.glow} stopOpacity="0"    />
         </radialGradient>
       </defs>
-
-      {/* Dark background */}
       <rect width="400" height="240" fill="#08090F" />
-
-      {/* Soft outer glow behind tile */}
-      <rect x="88" y="14" width="224" height="212" rx="44"
-        fill={p.glow} filter={`url(#${uid}-glow)`} opacity="0.45" />
-
-      {/* Glass tile body */}
-      <rect x="88" y="14" width="224" height="212" rx="44"
-        fill={`url(#${uid}-body)`} />
-
-      {/* Inner bottom color glow */}
-      <rect x="88" y="14" width="224" height="212" rx="44"
-        fill={`url(#${uid}-inner)`} clipPath={`url(#${uid}-clip)`} />
-
-      {/* Diagonal specular highlight */}
-      <ellipse cx="210" cy="90" rx="130" ry="72"
-        fill={`url(#${uid}-spec)`}
-        transform="rotate(-28 210 90)"
-        clipPath={`url(#${uid}-clip)`} />
-
-      {/* Top-left secondary gleam */}
-      <ellipse cx="118" cy="42" rx="38" ry="22"
-        fill="white" opacity="0.22"
-        clipPath={`url(#${uid}-clip)`} />
-
-      {/* Tile border */}
-      <rect x="88" y="14" width="224" height="212" rx="44"
-        fill="none"
-        stroke="rgba(255,255,255,0.28)"
-        strokeWidth="1.5" />
-
-      {/* Bottom rim light */}
-      <rect x="88" y="14" width="224" height="212" rx="44"
-        fill="none"
-        stroke={p.glow}
-        strokeWidth="1"
-        opacity="0.4" />
+      <rect x="88" y="14" width="224" height="212" rx="44" fill={p.glow} filter={} opacity="0.45" />
+      <rect x="88" y="14" width="224" height="212" rx="44" fill={} />
+      <rect x="88" y="14" width="224" height="212" rx="44" fill={} clipPath={} />
+      <ellipse cx="210" cy="90" rx="130" ry="72" fill={} transform="rotate(-28 210 90)" clipPath={} />
+      <ellipse cx="118" cy="42" rx="38" ry="22" fill="white" opacity="0.22" clipPath={} />
+      <rect x="88" y="14" width="224" height="212" rx="44" fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth="1.5" />
     </svg>
   );
 }

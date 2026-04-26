@@ -870,7 +870,7 @@ const copy = {
     stats: [
       { value: "-30%", label: "merma en 90 días" },
       { value: "+2 hrs", label: "al día libres para el dueño" },
-      { value: "ROI+", label: "positivo desde mes 2" },
+      { value: "ROI", label: "inmediato — se paga con el ahorro de merma" },
     ],
     statsCaveat: "*basado en casos piloto",
     pricingTag: "PRECIOS",
@@ -1137,7 +1137,7 @@ const copy = {
     stats: [
       { value: "-30%", label: "shrinkage in 90 days" },
       { value: "+2 hrs", label: "freed per day for the owner" },
-      { value: "ROI+", label: "positive from month 2" },
+      { value: "ROI", label: "immediate — pays for itself through waste savings" },
     ],
     statsCaveat: "*based on pilot cases",
     pricingTag: "PRICING",

@@ -11,146 +11,147 @@ import { useLang } from "@/lib/language-context";
 
 // ─── Feature organic 3-D shapes ──────────────────────────────────────────────
 function FeatureShape({ icon }: { icon: string }) {
-  const map: Record<string, React.ReactElement> = {
-
-    // pos — coral wavy tube
-    pos: (
+  // Shared glass panel + icon renderer
+  function GlassCard({
+    c1, c2, c3, b1x, b1y, b2x, b2y, children,
+  }: {
+    c1: string; c2: string; c3: string;
+    b1x: number; b1y: number; b2x: number; b2y: number;
+    children: React.ReactNode;
+  }) {
+    return (
       <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
         <defs>
-          <radialGradient id="g-pos" cx="170" cy="85" r="180" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#FFCAC3" /><stop offset="50%" stopColor="#FF6B57" /><stop offset="100%" stopColor="#B83020" />
-          </radialGradient>
-          <filter id="f-pos"><feDropShadow dx="0" dy="10" stdDeviation="14" floodColor="#B83020" floodOpacity="0.22" /></filter>
+          <linearGradient id={`bg-${icon}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor={c1} />
+            <stop offset="100%" stopColor={c3} />
+          </linearGradient>
+          <filter id={`bl-${icon}`} x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="32" />
+          </filter>
         </defs>
-        <rect width="400" height="240" fill="#FFF3F1" />
-        <path filter="url(#f-pos)" fill="url(#g-pos)"
-          d="M 65,108 C 78,56 116,44 142,88 C 162,124 184,148 212,108 C 236,70 272,52 300,90 C 314,110 314,136 300,156 C 278,186 242,184 220,152 C 200,122 182,106 158,140 C 136,172 102,180 76,156 C 58,140 54,125 65,108 Z" />
-      </svg>
-    ),
-
-    // brain — violet bumpy blob
-    brain: (
-      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
-        <defs>
-          <radialGradient id="g-brain" cx="160" cy="80" r="200" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#DDD0FF" /><stop offset="48%" stopColor="#8B5CF6" /><stop offset="100%" stopColor="#4C1D95" />
-          </radialGradient>
-          <filter id="f-brain"><feDropShadow dx="0" dy="10" stdDeviation="14" floodColor="#4C1D95" floodOpacity="0.22" /></filter>
-        </defs>
-        <rect width="400" height="240" fill="#F5F0FF" />
-        <path filter="url(#f-brain)" fill="url(#g-brain)"
-          d="M 200,44 C 238,40 272,58 292,88 C 310,56 332,72 328,104 C 348,118 348,148 328,162 C 330,192 308,210 280,208 C 260,228 228,228 208,210 C 192,224 168,222 154,208 C 124,212 102,192 106,164 C 84,148 84,116 106,100 C 104,68 130,50 160,56 C 172,48 186,44 200,44 Z" />
-      </svg>
-    ),
-
-    // bell — blue parallel inflated tubes
-    bell: (
-      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
-        <defs>
-          <radialGradient id="g-bell" cx="150" cy="70" r="220" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#BFDBFE" /><stop offset="48%" stopColor="#3B82F6" /><stop offset="100%" stopColor="#1E3A8A" />
-          </radialGradient>
-          <filter id="f-bell"><feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#1E3A8A" floodOpacity="0.22" /></filter>
-        </defs>
-        <rect width="400" height="240" fill="#EFF6FF" />
-        <g filter="url(#f-bell)" fill="url(#g-bell)">
-          <rect x="68" y="52" width="264" height="40" rx="20" />
-          <rect x="80" y="104" width="240" height="40" rx="20" />
-          <rect x="68" y="156" width="258" height="40" rx="20" />
+        {/* gradient background */}
+        <rect width="400" height="240" fill={`url(#bg-${icon})`} />
+        {/* blurred color blobs */}
+        <circle cx={b1x} cy={b1y} r="110" fill={c2} filter={`url(#bl-${icon})`} opacity="0.55" />
+        <circle cx={b2x} cy={b2y} r="90"  fill={c1} filter={`url(#bl-${icon})`} opacity="0.45" />
+        {/* glass panel */}
+        <rect x="128" y="55" width="144" height="130" rx="22"
+          fill="rgba(255,255,255,0.13)" stroke="rgba(255,255,255,0.38)" strokeWidth="1.5" />
+        {/* top-edge highlight */}
+        <line x1="148" y1="56" x2="254" y2="56"
+          stroke="rgba(255,255,255,0.55)" strokeWidth="1" strokeLinecap="round" />
+        {/* icon centered at 200,120 — white strokes */}
+        <g transform="translate(200,120)" stroke="white" strokeWidth="2.2"
+          fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {children}
         </g>
       </svg>
-    ),
+    );
+  }
 
-    // calendar — green 6-point asterisk
-    calendar: (
-      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
-        <defs>
-          <radialGradient id="g-cal" cx="185" cy="75" r="200" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#86EFAC" /><stop offset="48%" stopColor="#16A34A" /><stop offset="100%" stopColor="#14532D" />
-          </radialGradient>
-          <filter id="f-cal"><feDropShadow dx="0" dy="10" stdDeviation="14" floodColor="#14532D" floodOpacity="0.22" /></filter>
-        </defs>
-        <rect width="400" height="240" fill="#F0FFF4" />
-        <g filter="url(#f-cal)" fill="url(#g-cal)">
-          <rect x="116" y="100" width="168" height="40" rx="20" />
-          <rect x="116" y="100" width="168" height="40" rx="20" transform="rotate(60 200 120)" />
-          <rect x="116" y="100" width="168" height="40" rx="20" transform="rotate(120 200 120)" />
-        </g>
-      </svg>
-    ),
+  switch (icon) {
 
-    // chart — orange coral cluster
-    chart: (
-      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
-        <defs>
-          <radialGradient id="g-chart" cx="170" cy="80" r="200" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#FED7AA" /><stop offset="48%" stopColor="#F97316" /><stop offset="100%" stopColor="#9A3412" />
-          </radialGradient>
-          <filter id="f-chart"><feDropShadow dx="0" dy="10" stdDeviation="14" floodColor="#9A3412" floodOpacity="0.22" /></filter>
-        </defs>
-        <rect width="400" height="240" fill="#FFF7ED" />
-        <g filter="url(#f-chart)" fill="url(#g-chart)">
-          <circle cx="200" cy="120" r="52" />
-          <circle cx="152" cy="84" r="36" />
-          <circle cx="250" cy="82" r="34" />
-          <circle cx="252" cy="158" r="36" />
-          <circle cx="150" cy="158" r="34" />
-          <circle cx="200" cy="56" r="28" />
-          <circle cx="200" cy="184" r="28" />
-        </g>
-      </svg>
-    ),
+    // ── POS — tablet/terminal ────────────────────────────────────────────
+    case "pos": return (
+      <GlassCard c1="#7C3AED" c2="#6D28D9" c3="#2563EB" b1x={90} b1y={55} b2x={310} b2y={185}>
+        <rect x="-22" y="-26" width="44" height="54" rx="5" />
+        <rect x="-15" y="-19" width="30" height="18" rx="2" fill="rgba(255,255,255,0.18)" />
+        <circle cx="0" cy="18" r="4" fill="rgba(255,255,255,0.3)" stroke="white" strokeWidth="1.5" />
+        <line x1="-10" y1="3" x2="-4" y2="3" strokeWidth="1.5" />
+        <line x1="0" y1="3" x2="6" y2="3" strokeWidth="1.5" />
+      </GlassCard>
+    );
 
-    // building — teal smooth pillow
-    building: (
-      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
-        <defs>
-          <radialGradient id="g-bld" cx="155" cy="80" r="200" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#99F6E4" /><stop offset="48%" stopColor="#0D9488" /><stop offset="100%" stopColor="#134E4A" />
-          </radialGradient>
-          <filter id="f-bld"><feDropShadow dx="0" dy="10" stdDeviation="14" floodColor="#134E4A" floodOpacity="0.22" /></filter>
-        </defs>
-        <rect width="400" height="240" fill="#F0FDFA" />
-        <path filter="url(#f-bld)" fill="url(#g-bld)"
-          d="M 200,62 C 262,62 322,82 322,120 C 322,158 262,178 200,178 C 138,178 78,158 78,120 C 78,82 138,62 200,62 Z" />
-      </svg>
-    ),
+    // ── BRAIN — AI/neural ────────────────────────────────────────────────
+    case "brain": return (
+      <GlassCard c1="#0EA5E9" c2="#6366F1" c3="#06B6D4" b1x={100} b1y={60} b2x={300} b2y={180}>
+        <path d="M 0,-22 C -14,-22 -24,-12 -24,2 C -24,14 -16,22 -6,24 L 6,24 C 16,22 24,14 24,2 C 24,-12 14,-22 0,-22 Z" />
+        <line x1="0" y1="-22" x2="0" y2="24" strokeWidth="1.5" />
+        <path d="M -24,-2 C -30,-2 -30,-14 -24,-14" strokeWidth="1.8" />
+        <path d="M  24,-2 C  30,-2  30,-14  24,-14" strokeWidth="1.8" />
+        <line x1="-14" y1="6"  x2="-6"  y2="6"  strokeWidth="1.5" />
+        <line x1=" 6"  y1="6"  x2=" 14" y2="6"  strokeWidth="1.5" />
+        <line x1="-14" y1="-8" x2="-6"  y2="-8" strokeWidth="1.5" />
+        <line x1=" 6"  y1="-8" x2=" 14" y2="-8" strokeWidth="1.5" />
+      </GlassCard>
+    );
 
-    // percent — rose donut ring
-    percent: (
-      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
-        <defs>
-          <radialGradient id="g-pct" cx="165" cy="75" r="200" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#FBCFE8" /><stop offset="48%" stopColor="#EC4899" /><stop offset="100%" stopColor="#831843" />
-          </radialGradient>
-          <filter id="f-pct"><feDropShadow dx="0" dy="10" stdDeviation="14" floodColor="#831843" floodOpacity="0.22" /></filter>
-          <mask id="m-pct">
-            <rect width="400" height="240" fill="white" />
-            <circle cx="200" cy="120" r="38" fill="black" />
-          </mask>
-        </defs>
-        <rect width="400" height="240" fill="#FDF2F8" />
-        <circle cx="200" cy="120" r="82" fill="url(#g-pct)" filter="url(#f-pct)" mask="url(#m-pct)" />
-      </svg>
-    ),
+    // ── BELL — alerts / stock ────────────────────────────────────────────
+    case "bell": return (
+      <GlassCard c1="#EC4899" c2="#F43F5E" c3="#EF4444" b1x={80} b1y={50} b2x={320} b2y={190}>
+        <path d="M 0,-24 C 0,-24 -2,-24 -2,-20 C -14,-18 -22,-8 -22,6 L -22,16 L 22,16 L 22,6 C 22,-8 14,-18 2,-20 C 2,-24 0,-24 0,-24 Z" />
+        <path d="M -7,16 A 7,7 0 0 0 7,16" />
+        <circle cx="14" cy="-18" r="6" fill="rgba(255,100,100,0.7)" stroke="white" strokeWidth="1.8" />
+      </GlassCard>
+    );
 
-    // webhook — indigo figure-8
-    webhook: (
-      <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
-        <defs>
-          <radialGradient id="g-hook" cx="160" cy="80" r="200" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#C7D2FE" /><stop offset="48%" stopColor="#6366F1" /><stop offset="100%" stopColor="#312E81" />
-          </radialGradient>
-          <filter id="f-hook"><feDropShadow dx="0" dy="10" stdDeviation="14" floodColor="#312E81" floodOpacity="0.22" /></filter>
-        </defs>
-        <rect width="400" height="240" fill="#EEF2FF" />
-        <path filter="url(#f-hook)" fill="url(#g-hook)"
-          d="M 130,120 C 130,80 155,52 195,68 C 228,82 228,158 262,172 C 302,186 330,160 330,120 C 330,80 305,52 265,68 C 232,82 232,158 198,172 C 158,186 130,160 130,120 Z" />
-      </svg>
-    ),
-  };
+    // ── CALENDAR — reservations ──────────────────────────────────────────
+    case "calendar": return (
+      <GlassCard c1="#10B981" c2="#059669" c3="#0891B2" b1x={95} b1y={65} b2x={305} b2y={175}>
+        <rect x="-22" y="-20" width="44" height="42" rx="5" />
+        <line x1="-22" y1="-6" x2="22" y2="-6" strokeWidth="1.5" />
+        <line x1="-10" y1="-24" x2="-10" y2="-14" />
+        <line x1=" 10" y1="-24" x2=" 10" y2="-14" />
+        <circle cx="-12" cy="4"  r="2" fill="rgba(255,255,255,0.6)" stroke="none" />
+        <circle cx="0"   cy="4"  r="2" fill="rgba(255,255,255,0.6)" stroke="none" />
+        <circle cx="12"  cy="4"  r="2" fill="rgba(255,255,255,0.6)" stroke="none" />
+        <circle cx="-12" cy="14" r="2" fill="rgba(255,255,255,0.6)" stroke="none" />
+        <circle cx="0"   cy="14" r="2" fill="rgba(255,255,255,0.6)" stroke="none" />
+        <circle cx="12"  cy="14" r="2" fill="rgba(255,255,255,0.6)" stroke="none" />
+      </GlassCard>
+    );
 
-  return <div style={{ width: "100%", height: "100%" }}>{map[icon] ?? map["pos"]}</div>;
+    // ── CHART — projections / ROI ────────────────────────────────────────
+    case "chart": return (
+      <GlassCard c1="#F97316" c2="#EAB308" c3="#DC2626" b1x={100} b1y={55} b2x={300} b2y={185}>
+        <line x1="-22" y1="22" x2="22" y2="22" />
+        <line x1="-22" y1="-22" x2="-22" y2="22" />
+        <rect x="-18" y="2"  width="10" height="20" rx="2" fill="rgba(255,255,255,0.25)" />
+        <rect x="-5"  y="-10" width="10" height="32" rx="2" fill="rgba(255,255,255,0.35)" />
+        <rect x="8"   y="-18" width="10" height="40" rx="2" fill="rgba(255,255,255,0.45)" />
+      </GlassCard>
+    );
+
+    // ── BUILDING — multi-location ────────────────────────────────────────
+    case "building": return (
+      <GlassCard c1="#6366F1" c2="#4F46E5" c3="#7C3AED" b1x={85} b1y={60} b2x={315} b2y={180}>
+        <rect x="-22" y="-22" width="44" height="44" rx="3" />
+        <rect x="-14" y="-14" width="8" height="8" rx="1" fill="rgba(255,255,255,0.25)" />
+        <rect x="6"   y="-14" width="8" height="8" rx="1" fill="rgba(255,255,255,0.25)" />
+        <rect x="-14" y="2"   width="8" height="8" rx="1" fill="rgba(255,255,255,0.25)" />
+        <rect x="6"   y="2"   width="8" height="8" rx="1" fill="rgba(255,255,255,0.25)" />
+        <rect x="-6"  y="10"  width="12" height="12" rx="1" />
+        <line x1="-22" y1="22" x2="22" y2="22" />
+      </GlassCard>
+    );
+
+    // ── PERCENT — pricing / holistic ─────────────────────────────────────
+    case "percent": return (
+      <GlassCard c1="#A855F7" c2="#EC4899" c3="#6366F1" b1x={90} b1y={55} b2x={310} b2y={185}>
+        <circle cx="-10" cy="-12" r="8" />
+        <circle cx=" 10" cy=" 12" r="8" />
+        <line x1="16" y1="-20" x2="-16" y2="20" strokeWidth="2.5" />
+      </GlassCard>
+    );
+
+    // ── WEBHOOK — integrations ───────────────────────────────────────────
+    case "webhook": return (
+      <GlassCard c1="#14B8A6" c2="#0EA5E9" c3="#22C55E" b1x={95} b1y={60} b2x={305} b2y={180}>
+        <circle cx="-16" cy="-8" r="8" />
+        <circle cx=" 16" cy=" 8" r="8" />
+        <path d="M -8,-8 C 0,-8 0,8 8,8" strokeWidth="2" />
+        <circle cx="-16" cy="-8" r="3" fill="rgba(255,255,255,0.5)" stroke="none" />
+        <circle cx=" 16" cy=" 8" r="3" fill="rgba(255,255,255,0.5)" stroke="none" />
+      </GlassCard>
+    );
+
+    default: return (
+      <GlassCard c1="#7C3AED" c2="#6D28D9" c3="#2563EB" b1x={90} b1y={55} b2x={310} b2y={185}>
+        <circle cx="0" cy="0" r="20" />
+      </GlassCard>
+    );
+  }
 }
 
 // ─── Intersection Observer hook ──────────────────────────────────────────────

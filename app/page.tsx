@@ -17,7 +17,7 @@ function FeatureShape({ icon }: { icon: string }) {
   if (pngIcons.has(icon)) {
     return (
       <img
-        src={}
+        src={`/images/feature-${icon}.png`}
         alt={icon}
         style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
       />

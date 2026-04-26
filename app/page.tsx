@@ -24,39 +24,37 @@ function FeatureShape({ icon }: { icon: string }) {
     );
   }
 
-  // POS — glass SVG fallback
-  const uid = "gl-pos";
-  const p = { mid: "#5B8DEF", deep: "#1A2DB0", glow: "#3355CC" };
+  // POS — glass SVG fallback (static IDs, no template literals)
   return (
     <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
       <defs>
-        <linearGradient id={} x1="100%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id="pos-body" x1="100%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%"   stopColor="#C8D4F0" />
-          <stop offset="38%"  stopColor={p.mid}   />
-          <stop offset="100%" stopColor={p.deep}  />
+          <stop offset="38%"  stopColor="#5B8DEF" />
+          <stop offset="100%" stopColor="#1A2DB0" />
         </linearGradient>
-        <linearGradient id={} x1="0%" y1="0%" x2="60%" y2="100%">
+        <linearGradient id="pos-spec" x1="0%" y1="0%" x2="60%" y2="100%">
           <stop offset="0%"   stopColor="white" stopOpacity="0.82" />
           <stop offset="55%"  stopColor="white" stopOpacity="0.08" />
           <stop offset="100%" stopColor="white" stopOpacity="0"    />
         </linearGradient>
-        <filter id={} x="-30%" y="-30%" width="160%" height="160%">
+        <filter id="pos-glow" x="-30%" y="-30%" width="160%" height="160%">
           <feGaussianBlur stdDeviation="18" />
         </filter>
-        <clipPath id={}>
+        <clipPath id="pos-clip">
           <rect x="88" y="14" width="224" height="212" rx="44" />
         </clipPath>
-        <radialGradient id={} cx="50%" cy="90%" r="60%">
-          <stop offset="0%"   stopColor={p.glow} stopOpacity="0.55" />
-          <stop offset="100%" stopColor={p.glow} stopOpacity="0"    />
+        <radialGradient id="pos-inner" cx="50%" cy="90%" r="60%">
+          <stop offset="0%"   stopColor="#3355CC" stopOpacity="0.55" />
+          <stop offset="100%" stopColor="#3355CC" stopOpacity="0"    />
         </radialGradient>
       </defs>
       <rect width="400" height="240" fill="#08090F" />
-      <rect x="88" y="14" width="224" height="212" rx="44" fill={p.glow} filter={} opacity="0.45" />
-      <rect x="88" y="14" width="224" height="212" rx="44" fill={} />
-      <rect x="88" y="14" width="224" height="212" rx="44" fill={} clipPath={} />
-      <ellipse cx="210" cy="90" rx="130" ry="72" fill={} transform="rotate(-28 210 90)" clipPath={} />
-      <ellipse cx="118" cy="42" rx="38" ry="22" fill="white" opacity="0.22" clipPath={} />
+      <rect x="88" y="14" width="224" height="212" rx="44" fill="#3355CC" filter="url(#pos-glow)" opacity="0.45" />
+      <rect x="88" y="14" width="224" height="212" rx="44" fill="url(#pos-body)" />
+      <rect x="88" y="14" width="224" height="212" rx="44" fill="url(#pos-inner)" clipPath="url(#pos-clip)" />
+      <ellipse cx="210" cy="90" rx="130" ry="72" fill="url(#pos-spec)" transform="rotate(-28 210 90)" clipPath="url(#pos-clip)" />
+      <ellipse cx="118" cy="42" rx="38" ry="22" fill="white" opacity="0.22" clipPath="url(#pos-clip)" />
       <rect x="88" y="14" width="224" height="212" rx="44" fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth="1.5" />
     </svg>
   );

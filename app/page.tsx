@@ -8,57 +8,7 @@ import { GlitchButton } from "@/components/glitch-button";
 import { TypewriterText } from "@/components/typewriter-text";
 import { PricingCard } from "@/components/pricing-card";
 import { useLang } from "@/lib/language-context";
-
-// ─── Feature organic 3-D shapes ──────────────────────────────────────────────
-function FeatureShape({ icon }: { icon: string }) {
-  // Icons with custom PNGs
-  const pngIcons = new Set(["brain","bell","calendar","webhook","percent","building","chart"]);
-
-  if (pngIcons.has(icon)) {
-    return (
-      <img
-        src={`/images/feature-${icon}.png`}
-        alt={icon}
-        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-      />
-    );
-  }
-
-  // POS — glass SVG fallback (static IDs, no template literals)
-  return (
-    <svg viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "100%", display: "block" }}>
-      <defs>
-        <linearGradient id="pos-body" x1="100%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"   stopColor="#C8D4F0" />
-          <stop offset="38%"  stopColor="#5B8DEF" />
-          <stop offset="100%" stopColor="#1A2DB0" />
-        </linearGradient>
-        <linearGradient id="pos-spec" x1="0%" y1="0%" x2="60%" y2="100%">
-          <stop offset="0%"   stopColor="white" stopOpacity="0.82" />
-          <stop offset="55%"  stopColor="white" stopOpacity="0.08" />
-          <stop offset="100%" stopColor="white" stopOpacity="0"    />
-        </linearGradient>
-        <filter id="pos-glow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="18" />
-        </filter>
-        <clipPath id="pos-clip">
-          <rect x="88" y="14" width="224" height="212" rx="44" />
-        </clipPath>
-        <radialGradient id="pos-inner" cx="50%" cy="90%" r="60%">
-          <stop offset="0%"   stopColor="#3355CC" stopOpacity="0.55" />
-          <stop offset="100%" stopColor="#3355CC" stopOpacity="0"    />
-        </radialGradient>
-      </defs>
-      <rect width="400" height="240" fill="#08090F" />
-      <rect x="88" y="14" width="224" height="212" rx="44" fill="#3355CC" filter="url(#pos-glow)" opacity="0.45" />
-      <rect x="88" y="14" width="224" height="212" rx="44" fill="url(#pos-body)" />
-      <rect x="88" y="14" width="224" height="212" rx="44" fill="url(#pos-inner)" clipPath="url(#pos-clip)" />
-      <ellipse cx="210" cy="90" rx="130" ry="72" fill="url(#pos-spec)" transform="rotate(-28 210 90)" clipPath="url(#pos-clip)" />
-      <ellipse cx="118" cy="42" rx="38" ry="22" fill="white" opacity="0.22" clipPath="url(#pos-clip)" />
-      <rect x="88" y="14" width="224" height="212" rx="44" fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth="1.5" />
-    </svg>
-  );
-}
+import { AsciiAnimation } from "@/components/ascii-animation";
 
 
 // ─── Intersection Observer hook ──────────────────────────────────────────────
@@ -1496,9 +1446,9 @@ export default function StttockPage() {
                 className="flex flex-col"
                 delay={i * 50}
               >
-                {/* 3D organic shape */}
+                {/* ASCII animation */}
                 <div className="mx-3 mt-3 rounded-2xl overflow-hidden flex-shrink-0" style={{ height: "190px" }}>
-                  <FeatureShape icon={f.icon} />
+                  <AsciiAnimation icon={f.icon} />
                 </div>
                 {/* Text */}
                 <div className="px-5 py-4 flex flex-col flex-1">

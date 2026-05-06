@@ -9,6 +9,7 @@ import { TypewriterText } from "@/components/typewriter-text";
 import { PricingCard } from "@/components/pricing-card";
 import { useLang } from "@/lib/language-context";
 import { AsciiAnimation } from "@/components/ascii-animation";
+import { UnicornBackground } from "@/components/unicorn-background";
 
 
 // ─── Intersection Observer hook ──────────────────────────────────────────────
@@ -1418,9 +1419,14 @@ export default function StttockPage() {
       {/* ── FEATURES GRID ─────────────────────────────────────────────────── */}
       <section
         id="features"
-        className="py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06]"
+        className="relative py-32 px-6 md:px-12 lg:px-20 border-t border-black/[0.06] overflow-hidden"
       >
-        <div className="max-w-6xl mx-auto">
+        {/* UnicornStudio animated background */}
+        <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.55 }}>
+          <UnicornBackground projectId="lEEkGr2PFLJMXN7cWNzH" />
+        </div>
+
+        <div className="relative z-10 max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16">
             <div>
               <div className="mb-4">

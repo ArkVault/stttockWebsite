@@ -27,10 +27,10 @@ export function GlitchButton({ href, children, className = "" }: GlitchButtonPro
 
         /* ── Rest state ─────────────────────────────────────────── */
         .neon-pill {
-          background: rgba(255, 255, 255, 0.09);
-          backdrop-filter: blur(10px) saturate(130%);
-          -webkit-backdrop-filter: blur(10px) saturate(130%);
-          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+          background: rgba(10, 10, 10, 0.72);
+          backdrop-filter: blur(12px) saturate(140%);
+          -webkit-backdrop-filter: blur(12px) saturate(140%);
+          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
           transition:
             background 0.4s ease,
             box-shadow 0.4s ease,
@@ -68,24 +68,29 @@ export function GlitchButton({ href, children, className = "" }: GlitchButtonPro
           background: conic-gradient(
             from 0deg,
             transparent 0deg,
-            transparent 316deg,
-            rgba(134, 239, 172, 0.3)  336deg,
-            rgba(210, 255, 235, 0.88) 347deg,
-            rgba(255, 255, 255, 1)    351deg,
-            rgba(210, 255, 235, 0.88) 355deg,
-            rgba(134, 239, 172, 0.3)  359deg,
+            transparent 298deg,
+            rgba(74,  222, 128, 0.25)  310deg,
+            rgba(134, 239, 172, 0.7)   325deg,
+            rgba(210, 255, 235, 1)     338deg,
+            rgba(255, 255, 255, 1)     343deg,
+            rgba(255, 255, 255, 1)     346deg,
+            rgba(210, 255, 235, 1)     350deg,
+            rgba(134, 239, 172, 0.7)   356deg,
+            rgba(74,  222, 128, 0.25)  360deg,
             transparent 360deg
           );
           animation: neon-orbit 2.4s linear infinite;
           will-change: transform;
+          filter: blur(0.6px);
         }
 
         /* ── Hover ──────────────────────────────────────────────── */
         .neon-pill:hover {
-          background: rgba(255, 255, 255, 0.03);
+          background: rgba(10, 10, 10, 0.6);
           box-shadow:
-            0 0 12px rgba(134, 239, 172, 0.2),
-            0 0 28px rgba(134, 239, 172, 0.09);
+            0 0 10px  rgba(134, 239, 172, 0.45),
+            0 0 22px  rgba(134, 239, 172, 0.25),
+            0 0 45px  rgba(74,  222, 128, 0.12);
           transform: translateY(-1px);
         }
 
@@ -94,8 +99,10 @@ export function GlitchButton({ href, children, className = "" }: GlitchButtonPro
         }
 
         .neon-pill:hover .neon-label {
-          color: #f0fdf4;
-          text-shadow: 0 0 10px rgba(134, 239, 172, 0.38);
+          color: #ffffff;
+          text-shadow:
+            0 0 8px  rgba(134, 239, 172, 0.7),
+            0 0 18px rgba(134, 239, 172, 0.35);
         }
 
         /* ── Label ──────────────────────────────────────────────── */

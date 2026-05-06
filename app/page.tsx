@@ -674,7 +674,7 @@ const copy = {
     ],
     heroSub:
       "Control de inventario, POS, reservas y proyecciones inteligentes en un solo lugar.",
-    heroCta: "21 días gratis",
+    heroCta: "Hasta 2 meses sin pagar",
     heroDemo: "¿Cómo funciona?",
     problemTag: "EL PROBLEMA",
     problemTitle: "Lo que ya conoces.",
@@ -920,7 +920,7 @@ const copy = {
       },
     ],
     ctaTitle: "Empieza hoy.",
-    ctaSub: "21 días gratis, sin tarjeta.",
+    ctaSub: "Hasta 2 meses sin pagar, sin tarjeta.",
     ctaBtn: "CREAR CUENTA →",
     footerTagline: "Gestión inteligente para bares y restaurantes en México.",
     footerProduct: "Producto",
@@ -941,7 +941,7 @@ const copy = {
     ],
     heroSub:
       "Inventory control, POS, reservations, and smart projections — all in one place.",
-    heroCta: "30 days free",
+    heroCta: "Up to 2 months without paying",
     heroDemo: "See demo",
     problemTag: "THE PROBLEM",
     problemTitle: "What you already know.",
@@ -1187,7 +1187,7 @@ const copy = {
       },
     ],
     ctaTitle: "Start today.",
-    ctaSub: "30 days free, no card required.",
+    ctaSub: "Up to 2 months without paying, no card required.",
     ctaBtn: "CREATE ACCOUNT →",
     footerTagline: "Intelligent management for bars and restaurants in Mexico.",
     footerProduct: "Product",
@@ -1734,7 +1734,7 @@ export default function StttockPage() {
             Empieza hoy.
           </h2>
           <p className="text-sm text-black/45 leading-relaxed mb-10">
-            21 días gratis, sin tarjeta.
+            Hasta 2 meses sin pagar, sin tarjeta.
           </p>
           <a
             href="https://app.stttock.com/auth/login"

@@ -9,7 +9,7 @@ import { TypewriterText } from "@/components/typewriter-text";
 import { PricingCard } from "@/components/pricing-card";
 import { useLang } from "@/lib/language-context";
 import { AsciiAnimation } from "@/components/ascii-animation";
-import { UnicornBackground } from "@/components/unicorn-background";
+import { FeatureBackground } from "@/components/feature-background";
 
 
 // ─── Intersection Observer hook ──────────────────────────────────────────────
@@ -1423,7 +1423,7 @@ export default function StttockPage() {
       >
         {/* UnicornStudio animated background */}
         <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.55 }}>
-          <UnicornBackground projectId="lEEkGr2PFLJMXN7cWNzH" />
+          <FeatureBackground />
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto">

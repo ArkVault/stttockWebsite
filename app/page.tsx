@@ -838,8 +838,8 @@ const copy = {
     faqTitle: "Preguntas frecuentes.",
     faqs: [
       {
-        q: "¿Qué pasa tras los 21 días?",
-        a: "Tu prueba gratuita se convierte automáticamente en el plan que elijas. Te avisamos 3 días antes para que decidas si continuar. Sin compromisos.",
+        q: "¿Qué pasa después de los 2 meses?",
+        a: "Tu prueba gratuita se convierte automáticamente en el plan que elijas. Te avisamos 3 días antes para que decidas si continuar. Sin compromisos. El primer mes es gratuito y el segundo lo pagas hasta el tercero, teniendo así 60 días para probar.",
       },
       {
         q: "¿Puedo cancelar cuando quiera?",
@@ -1105,8 +1105,8 @@ const copy = {
     faqTitle: "Frequently asked questions.",
     faqs: [
       {
-        q: "What happens after 30 days?",
-        a: "Your free trial automatically converts to the plan you choose. We notify you 3 days in advance. No commitments.",
+        q: "What happens after 2 months?",
+        a: "Your free trial automatically converts to the plan you choose. We notify you 3 days in advance so you can decide whether to continue. No commitments. The first month is free and you pay the second one on the third month — giving you 60 days to try it out.",
       },
       {
         q: "Can I cancel anytime?",
